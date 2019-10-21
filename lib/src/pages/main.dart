@@ -78,7 +78,7 @@ class _MainState extends State<Main> {
           movement(15.0, DateTime.now(), "Recarga Virtual"),
           movement(-1.5, DateTime.now(), "Viaje San Borja"),
           movement(-1.5, DateTime.now(), "Viaje Jorge Chavez"),
-          movement(-1.5, DateTime.now(), "Viaje La Cultura")
+          movement(-1.5,DateTime.now(), "Viaje La Cultura")
         ],
       ));
   }  
