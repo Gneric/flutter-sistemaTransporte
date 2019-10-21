@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:sistema_transporte/src/pages/drawer.dart';
+import 'package:sistema_transporte/src/pages/ui_size.dart';
 
 class Main extends StatefulWidget {
   Main({Key key}) : super(key: key);
@@ -12,14 +15,14 @@ class _MainState extends State<Main> {
     "S/25.00",
     textAlign: TextAlign.center,
     style: TextStyle(
-        color: Colors.green, fontSize: 50, fontWeight: FontWeight.bold),
+        color: Colors.green, fontSize: 35, fontWeight: FontWeight.bold),
   );
 
   final welcome = Text(
     "Bienvenido",
     textAlign: TextAlign.center,
     style: TextStyle(
-        color: Colors.black, fontSize: 50, fontWeight: FontWeight.bold),
+        color: Colors.black, fontSize: 50, fontWeight: FontWeight.bold ),
   );
 
   final userWelcome = Text(
@@ -32,7 +35,9 @@ class _MainState extends State<Main> {
   final currencyBox = Container(
       margin: EdgeInsets.all(5.0),
       padding: EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 30.0),
-      decoration: BoxDecoration(border: Border.all()),
+      decoration: BoxDecoration(
+          border: Border.all(),
+          borderRadius: new BorderRadius.all(Radius.circular(20.0))),
       child: Column(
         children: <Widget>[
           SizedBox(height: 10.0),
@@ -44,29 +49,54 @@ class _MainState extends State<Main> {
           ),
           SizedBox(height: 10.0),
           Text(
-            "S/25.00",
+            "S/ 25.00",
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 35, color: Colors.green),
+                fontWeight: FontWeight.bold, fontSize: 50, color: Colors.green),
           )
         ],
       ));
 
-  final movementBox = Container(
-      margin: EdgeInsets.all(5.0),
-      padding: EdgeInsets.fromLTRB(10, 15, 10, 15),
-      decoration: BoxDecoration(border: Border.all()),
+  Widget movementBox(context) {
+    return Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
+      decoration: BoxDecoration(
+          border: Border(top: BorderSide(color: Colors.black, width: 1.5))),
       child: Column(
         children: <Widget>[
-          movement(10, "positivo", DateTime.now(), "Recarga Aviacion"),
-          movement(-2, "negativo", DateTime.now(), "Viaje San Borja"),
-          movement(10, "positivo", DateTime.now(), "Recarga Jorge Chavez"),
-          movement(-2, "negativo", DateTime.now(), "Viaje La Cultura")
+          Container(
+            margin: EdgeInsets.only(top: SizeConfig.blockSizeVertical / 2.5, bottom: SizeConfig.blockSizeVertical / 2.5),
+            child: Text(
+              "Ultimos Movimientos",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          movement(15.0, DateTime.now(), "Recarga Virtual"),
+          movement(-1.5, DateTime.now(), "Viaje San Borja"),
+          movement(-1.5, DateTime.now(), "Viaje Jorge Chavez"),
+          movement(-1.5, DateTime.now(), "Viaje La Cultura")
         ],
       ));
+  }  
 
-  static Widget movement(
-      int saldo, String tipo, DateTime fecha, String mensaje) {
+  static Widget movement(double saldo,DateTime fecha,String mensaje) {
+    String tipo = saldo < 0 ? "negativo":"positivo" ;
+
+    var subT = fecha.year.toString() +
+        '/' +
+        fecha.month.toString() +
+        '/' +
+        fecha.day.toString();
+    
+    final _soles = <String, String>{
+      "positivo": 'S/ '+saldo.toString()+'0',
+      "negativo": 'S/ '+(saldo).toString().replaceFirst('-', '- ') +'0',
+    };
+
     final _icons = <String, IconData>{
       "positivo": Icons.arrow_drop_up,
       "negativo": Icons.arrow_drop_down
@@ -77,86 +107,60 @@ class _MainState extends State<Main> {
       "negativo": Colors.red,
     };
 
-    var subT = fecha.year.toString() +
-        '/' +
-        fecha.month.toString() +
-        '/' +
-        fecha.day.toString();
+    final _backgroundColors = <String, Color>{
+      "positivo": Colors.green[50],
+      "negativo": Colors.red[50],
+    };
 
-    return ListTile(
-      title: Text(mensaje),
-      subtitle: Text(subT),
-      trailing: Text(saldo.toString(), style: TextStyle(color: _colors[tipo])),
-      leading: Icon(
-        _icons[tipo],
-        color: _colors[tipo],
-        size: 25,
-        semanticLabel: 'uwu',
+    return Card(
+      elevation: 0.5,
+      color: _backgroundColors[tipo],
+      child: ListTile(
+        onTap: () {},
+        title: Text(mensaje),
+        subtitle: Text(subT),
+        leading: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(_soles[tipo], style: TextStyle(color: _colors[tipo])),
+            Icon(
+              _icons[tipo],
+              color: _colors[tipo],
+              size: 25,
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  final mainDrawer = Drawer(
-    child: Column(
-      children: <Widget>[
-        new UserAccountsDrawerHeader(
-            currentAccountPicture: Icon(
-              Icons.account_circle,
-              size: 80,
-            ),
-            accountName: Text("Oscar Biondi"),
-            accountEmail: Text("obiondi99@gmail.com"),
-            arrowColor: Colors.white,
-            decoration: BoxDecoration(color: Colors.green)),
-        Column(
-          children: <Widget>[
-            ListTile(
-              leading: Icon(Icons.account_balance_wallet),
-              title: Text("Movimientos"),
-            ),
-            ListTile(
-              leading: Icon(Icons.add_shopping_cart),
-              title: Text("Recarga"),
-            ),
-            ListTile(
-              leading: Icon(Icons.schedule),
-              title: Text("Planea un viaje"),
-            )
-          ],
-        )
-      ],
-    ),
-  );
-
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context); // UI SCALING
     return Scaffold(
       backgroundColor: Colors.white,
-      drawer: mainDrawer,
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+      ),
+      drawer: NavigationDrawer(),
       body: SafeArea(
         child: Center(
           child: Container(
             color: Colors.white,
             child: Padding(
-              padding: EdgeInsets.all(36.0),
+              padding: EdgeInsets.fromLTRB(0,SizeConfig.blockSizeHorizontal*4,0,0),
               child: Column(
                 children: <Widget>[
-                  SizedBox(height: 30.0),
+                  SizedBox(height: SizeConfig.blockSizeVertical * 2),
                   welcome,
-                  SizedBox(height: 2.0),
+                  SizedBox(height: SizeConfig.blockSizeVertical / 2),
                   userWelcome,
-                  SizedBox(height: 50.0),
+                  SizedBox(height: SizeConfig.blockSizeVertical * 5),
                   currencyBox,
-                  SizedBox(height: 80.0),
-                  Text(
-                    "Movimientos",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  movementBox,
+                  SizedBox(height: SizeConfig.blockSizeVertical * 6),
+                  movementBox(context),
                 ],
               ),
             ),
