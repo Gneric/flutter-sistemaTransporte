@@ -1,18 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_transporte/src/pages/main.dart';
-import 'package:sistema_transporte/src/pages/register.dart';
 
-class Login extends StatefulWidget {
-  Login({Key key}) : super(key: key);
-
-  _LoginState createState() => _LoginState();
-}
-
-class _LoginState extends State<Login> {
-  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
+class Register extends StatefulWidget {
+  Register({Key key}) : super(key: key);
 
   @override
+  _RegisterState createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
+  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
+
   Widget build(BuildContext context) {
+
+    final userField = TextField(
+      obscureText: false,
+      decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
+          hintText: "Username",
+          border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+    );
+
     final emailField = TextField(
       obscureText: false,
       decoration: InputDecoration(
@@ -31,24 +39,6 @@ class _LoginState extends State<Login> {
               OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
 
-    final loginButton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Color(0xff01A0C7),
-      child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Main()));
-        },
-        child: Text("Login",
-            textAlign: TextAlign.center,
-            style: style.copyWith(
-                color: Colors.white, fontWeight: FontWeight.bold)),
-      ),
-    );
-
     final registerButton = Material(
       elevation: 5.0,
       borderRadius: BorderRadius.circular(30.0),
@@ -56,10 +46,7 @@ class _LoginState extends State<Login> {
       child: MaterialButton(
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Register()));
-        },
+        onPressed: () {},
         child: Text("Register",
             textAlign: TextAlign.center,
             style: style.copyWith(
@@ -85,15 +72,16 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 SizedBox(height: 45.0),
+                userField,
+                SizedBox(height: 25.0),
                 emailField,
                 SizedBox(height: 25.0),
                 passwordField,
                 SizedBox(height: 35.0),
-                loginButton,
+                registerButton,
                 SizedBox(
                   height: 15.0,
-                ),
-                registerButton,
+                )
               ],
             ),
           ),
