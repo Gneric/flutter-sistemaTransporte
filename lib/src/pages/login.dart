@@ -90,9 +90,7 @@ class _LoginState extends State<Login> {
                 passwordField,
                 SizedBox(height: 35.0),
                 loginButton,
-                SizedBox(
-                  height: 15.0,
-                ),
+                SizedBox(height: 15.0),
                 registerButton,
               ],
             ),

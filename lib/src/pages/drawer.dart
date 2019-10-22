@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_transporte/src/pages/configuration.dart';
 import 'package:sistema_transporte/src/pages/login.dart';
 import 'package:sistema_transporte/src/pages/main.dart';
 import 'package:sistema_transporte/src/pages/movements.dart';
+import 'package:sistema_transporte/src/pages/planner.dart';
+import 'package:sistema_transporte/src/pages/recharge.dart';
+import 'package:sistema_transporte/src/pages/stations.dart';
 
 class NavigationDrawer extends StatelessWidget {
   @override
@@ -44,20 +48,44 @@ class NavigationDrawer extends StatelessWidget {
                 new ListTile(
                   leading: Icon(Icons.payment, color: Colors.black, size: 30),
                   title: Text("Recarga"),
-                ),
+                  onTap: () => {
+                          Navigator.pop(context),
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Recargar())),
+                        }),
                 new ListTile(
                   leading: Icon(Icons.subway, color: Colors.black, size: 30),
                   title: Text("Estaciones"),
-                ),
+                  onTap: () => {
+                          Navigator.pop(context),
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Estaciones())),
+                        }),
                 new ListTile(
                   leading: Icon(Icons.departure_board,
                       color: Colors.black, size: 30),
                   title: Text("Planea un viaje"),
-                ),
+                  onTap: () => {
+                          Navigator.pop(context),
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Planeador())),
+                        }),
                 new ListTile(
                   leading: Icon(Icons.settings, color: Colors.black, size: 30),
                   title: Text("Configuracion"),
-                ),
+                  onTap: () => {
+                          Navigator.pop(context),
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Configuracion())),
+                        }),
               ],
             ),
           ),

@@ -9,16 +9,19 @@ class Movimientos extends StatefulWidget {
 }
 
 class _MovimientosState extends State<Movimientos> {
-
   @override
   Widget build(BuildContext context) {
     var fecha = DateTime.now();
-    var subT = fecha.year.toString()+'/'+fecha.month.toString()+'/'+fecha.day.toString();
-
+    var date = fecha.year.toString() +
+        '/' +
+        fecha.month.toString() +
+        '/' +
+        fecha.day.toString();
+    var hour = fecha.hour.toString() + ':' + fecha.minute.toString();
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,       
+        backgroundColor: Colors.green,
       ),
       drawer: NavigationDrawer(),
       backgroundColor: Colors.white,
@@ -26,19 +29,77 @@ class _MovimientosState extends State<Movimientos> {
         child: Container(
           color: Colors.white,
           child: Padding(
-            padding: const EdgeInsets.all(25.0),
-            child: ListView.builder(
-              itemCount: 30,
-              itemBuilder: ( context, index ){
-                return ListTile(
-                  title: Text('Movimiento ${index + 1}'),
-                  subtitle: Text(subT),
-                );
-              },
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              child: ListView.builder(
+                itemCount: 30,
+                itemBuilder: (context, index) {
+                  return Card(
+                    child: ListTile(
+                      title: Text('Movimiento ${index + 1}'),
+                      subtitle: Text(date),
+                      onTap: () => _searchMovement(10.0,'Movimiento ${index + 1}', date, hour),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),
-      ) ,
+      ),
     );
+  }
+
+  void _searchMovement(
+      double saldo, String movimiento, String date, String hora) {
+    String tipo = saldo < 0 ? "negativo" : "positivo";
+
+    final _backgroundColors = <String, Color>{
+      "positivo": Colors.green[50],
+      "negativo": Colors.red[50],
+    };
+
+    final _soles = <String, String>{
+      "positivo": 'S/ ' + saldo.toString() + '0',
+      "negativo": 'S/ ' + (saldo).toString().replaceFirst('-', '- ') + '0',
+    };
+
+    final _icons = <String, IconData>{
+      "positivo": Icons.arrow_drop_up,
+      "negativo": Icons.arrow_drop_down
+    };
+
+    final _colors = <String, Color>{
+      "positivo": Colors.green,
+      "negativo": Colors.red,
+    };
+
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Container(
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(15.0),
+                    child: Container(
+                      child: Text(movimiento, style: TextStyle(fontWeight: FontWeight.bold ),),
+                    ),
+                  ),
+                  ListTile(
+                    title: Text('Date'),
+                    subtitle: Text(date),
+                  ),
+                  ListTile(
+                    title: Text('Hora'),
+                    subtitle: Text(hora),
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
