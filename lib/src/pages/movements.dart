@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_transporte/src/pages/drawer.dart';
+import 'package:sistema_transporte/src/utils/movements_util.dart';
+
 
 class Movimientos extends StatefulWidget {
   Movimientos({Key key}) : super(key: key);
@@ -11,13 +13,6 @@ class Movimientos extends StatefulWidget {
 class _MovimientosState extends State<Movimientos> {
   @override
   Widget build(BuildContext context) {
-    var fecha = DateTime.now();
-    var date = fecha.year.toString() +
-        '/' +
-        fecha.month.toString() +
-        '/' +
-        fecha.day.toString();
-    var hour = fecha.hour.toString() + ':' + fecha.minute.toString();
 
     return Scaffold(
       appBar: AppBar(
@@ -31,17 +26,22 @@ class _MovimientosState extends State<Movimientos> {
           child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Container(
-              child: ListView.builder(
-                itemCount: 30,
-                itemBuilder: (context, index) {
-                  return Card(
-                    child: ListTile(
-                      title: Text('Movimiento ${index + 1}'),
-                      subtitle: Text(date),
-                      onTap: () => _searchMovement(10.0,'Movimiento ${index + 1}', date, hour),
-                    ),
-                  );
-                },
+              child: ListView(
+                children: <Widget>[
+                  movement(15.0, '2019/10/24','08:14', "Recarga Virtual", context),
+                  movement(-1.5, '2019/10/24','12:40', "Viaje San Borja", context),
+                  movement(-1.5, '2019/10/24','09:53', "Viaje Jorge Chavez", context),
+                  movement(-1.5, '2019/10/24','06:15', "Viaje La Cultura", context),
+                  movement(-1.5, '2019/10/23', '09:46', 'Viaje San Borja Sur', context),
+                  movement(-1.5, '2019/10/23', '08:30', 'Viaje Aviacion', context),
+                  movement(-1.5, '2019/10/23', '05:46', 'Viaje Angamos Este', context),
+                  movement(-1.5, '2019/10/23', '02:10', 'Viaje Bayobar', context),
+                  movement(-1.5, '2019/10/23', '12:30', 'Viaje Jardines', context),
+                  movement(-1.5, '2019/10/22', '08:37', 'Viaje Gamarra', context),
+                  movement(10, '2019/10/20', '05:15', 'Recarga Villa', context),
+                  movement(-1.5, '2019/10/20', '03:40', 'Viaje Parque Industrial', context),
+                  movement(-1.5, '2019/10/20', '02:20', 'Viaje Pumacahua', context),
+                ],
               ),
             ),
           ),
@@ -50,56 +50,4 @@ class _MovimientosState extends State<Movimientos> {
     );
   }
 
-  void _searchMovement(
-      double saldo, String movimiento, String date, String hora) {
-    String tipo = saldo < 0 ? "negativo" : "positivo";
-
-    final _backgroundColors = <String, Color>{
-      "positivo": Colors.green[50],
-      "negativo": Colors.red[50],
-    };
-
-    final _soles = <String, String>{
-      "positivo": 'S/ ' + saldo.toString() + '0',
-      "negativo": 'S/ ' + (saldo).toString().replaceFirst('-', '- ') + '0',
-    };
-
-    final _icons = <String, IconData>{
-      "positivo": Icons.arrow_drop_up,
-      "negativo": Icons.arrow_drop_down
-    };
-
-    final _colors = <String, Color>{
-      "positivo": Colors.green,
-      "negativo": Colors.red,
-    };
-
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Container(
-              child: Column(
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Container(
-                      child: Text(movimiento, style: TextStyle(fontWeight: FontWeight.bold ),),
-                    ),
-                  ),
-                  ListTile(
-                    title: Text('Date'),
-                    subtitle: Text(date),
-                  ),
-                  ListTile(
-                    title: Text('Hora'),
-                    subtitle: Text(hora),
-                  )
-                ],
-              ),
-            ),
-          );
-        });
-  }
 }

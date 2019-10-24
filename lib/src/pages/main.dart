@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_transporte/src/pages/drawer.dart';
 import 'package:sistema_transporte/src/pages/ui_size.dart';
+import 'package:sistema_transporte/src/utils/movements_util.dart';
 
 class Main extends StatefulWidget {
   Main({Key key}) : super(key: key);
@@ -74,66 +75,13 @@ class _MainState extends State<Main> {
               ),
             ),
           ),
-          movement(15.0, DateTime.now(), "Recarga Virtual"),
-          movement(-1.5, DateTime.now(), "Viaje San Borja"),
-          movement(-1.5, DateTime.now(), "Viaje Jorge Chavez"),
-          movement(-1.5,DateTime.now(), "Viaje La Cultura")
+          movement(15.0, '2019/10/24','08:14', "Recarga Virtual", context),
+          movement(-1.5, '2019/10/24','12:40', "Viaje San Borja", context),
+          movement(-1.5, '2019/10/24','09:53', "Viaje Jorge Chavez", context),
+          movement(-1.5, '2019/10/24','06:15', "Viaje La Cultura", context)
         ],
       ));
-  }  
-
-  static Widget movement(double saldo,DateTime fecha,String mensaje) {
-    String tipo = saldo < 0 ? "negativo":"positivo" ;
-
-    var subT = fecha.year.toString() +
-        '/' +
-        fecha.month.toString() +
-        '/' +
-        fecha.day.toString();
-    
-    final _soles = <String, String>{
-      "positivo": 'S/ '+saldo.toString()+'0',
-      "negativo": 'S/ '+(saldo).toString().replaceFirst('-', '- ') +'0',
-    };
-
-    final _icons = <String, IconData>{
-      "positivo": Icons.arrow_drop_up,
-      "negativo": Icons.arrow_drop_down
-    };
-
-    final _colors = <String, Color>{
-      "positivo": Colors.green,
-      "negativo": Colors.red,
-    };
-
-    final _backgroundColors = <String, Color>{
-      "positivo": Colors.green[50],
-      "negativo": Colors.red[50],
-    };
-
-    return Card(
-      elevation: 0.5,
-      color: _backgroundColors[tipo],
-      child: ListTile(
-        onTap: () {},
-        title: Text(mensaje),
-        subtitle: Text(subT),
-        leading: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Text(_soles[tipo], style: TextStyle(color: _colors[tipo])),
-            Icon(
-              _icons[tipo],
-              color: _colors[tipo],
-              size: 25,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  } 
 
   @override
   Widget build(BuildContext context) {
