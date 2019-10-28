@@ -10,8 +10,10 @@ class Configuracion extends StatefulWidget {
 class _ConfiguracionState extends State<Configuracion> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-       
+    return Scaffold(
+      body: Container(
+        
+      ),
     );
   }
 }
