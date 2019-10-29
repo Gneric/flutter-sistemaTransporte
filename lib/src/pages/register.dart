@@ -67,7 +67,7 @@ class _RegisterState extends State<Register> {
                 SizedBox(
                   height: 155.0,
                   child: Image.asset(
-                    "assets/logo.png",
+                    "assets/LogoSIT.png",
                     fit: BoxFit.contain,
                   ),
                 ),

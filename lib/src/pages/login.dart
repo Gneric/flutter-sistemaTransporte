@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_transporte/src/pages/main.dart';
-import 'package:sistema_transporte/src/pages/register.dart';
 
 class Login extends StatefulWidget {
   Login({Key key}) : super(key: key);
@@ -10,6 +8,34 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
+
+  static const snackBarDuration = Duration(seconds: 2);
+
+  final snackBar = SnackBar(
+    content: Text('Presione nuevamente para salir de la aplicacion'),
+    duration: snackBarDuration,
+    backgroundColor:  Colors.red,
+  );
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  DateTime backButtonPressTime;
+
+  Future<bool> onWillPop() async {
+    DateTime currentTime = DateTime.now();
+
+    bool backButtonHasNotBeenPressedOrSnackBarHasBeenClosed =
+        backButtonPressTime == null ||
+            currentTime.difference(backButtonPressTime) > snackBarDuration;
+
+    if (backButtonHasNotBeenPressedOrSnackBarHasBeenClosed) {
+      backButtonPressTime = currentTime;
+      scaffoldKey.currentState.showSnackBar(snackBar);
+      return false;
+    }
+
+    return true;
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +65,7 @@ class _LoginState extends State<Login> {
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Main()));
+          Navigator.of(context).pushReplacementNamed('/principal');
         },
         child: Text("Login",
             textAlign: TextAlign.center,
@@ -57,8 +82,7 @@ class _LoginState extends State<Login> {
         minWidth: MediaQuery.of(context).size.width,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Register()));
+          Navigator.of(context).pushNamed('/registrar');
         },
         child: Text("Register",
             textAlign: TextAlign.center,
@@ -68,31 +92,35 @@ class _LoginState extends State<Login> {
     );
 
     return Scaffold(
-      body: Center(
-        child: Container(
-          color: Colors.white,
-          child: Padding(
-            padding: EdgeInsets.all(36.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SizedBox(
-                  height: 155.0,
-                  child: Image.asset(
-                    "assets/logo.png",
-                    fit: BoxFit.contain,
+      key: scaffoldKey,
+      body: WillPopScope(
+        onWillPop: onWillPop,
+        child: Center(
+          child: Container(
+            color: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.all(36.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(
+                    height: 155.0,
+                    child: Image.asset(
+                      "assets/LogoSIT.png",
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                ),
-                SizedBox(height: 45.0),
-                emailField,
-                SizedBox(height: 25.0),
-                passwordField,
-                SizedBox(height: 35.0),
-                loginButton,
-                SizedBox(height: 15.0),
-                registerButton,
-              ],
+                  SizedBox(height: 45.0),
+                  emailField,
+                  SizedBox(height: 25.0),
+                  passwordField,
+                  SizedBox(height: 35.0),
+                  loginButton,
+                  SizedBox(height: 15.0),
+                  registerButton,
+                ],
+              ),
             ),
           ),
         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_transporte/src/pages/drawer.dart';
-import 'package:sistema_transporte/src/utils/movements_util.dart';
+import 'package:sistema_transporte/src/utils/movement_util.dart';
 
 
 class Movimientos extends StatefulWidget {

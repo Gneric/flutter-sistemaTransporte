@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-//import 'package:sit/src/pages/home.dart';
 import 'package:sistema_transporte/src/pages/login.dart';
+import 'package:sistema_transporte/src/pages/main.dart';
+import 'package:sistema_transporte/src/routes/route_generator.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -8,7 +9,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       title: 'Material App',
-      home: Login()
+      initialRoute: '/',
+      onGenerateRoute: RouteGenerator.generateRoute,
+      routes: <String, WidgetBuilder>{
+        '/principal': (context) => Main(),
+        '/': (context) => Login(),
+      },
     );
   }
 }

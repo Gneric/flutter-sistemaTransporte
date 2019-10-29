@@ -15,10 +15,22 @@ class _RecargarState extends State<Recargar> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      litems.add(new Cards('Card Modelo', '4458 55662 8877 9985', '02/25'));
-    });
+    litems.add(new Cards('Card Modelo', '4458 55662 8877 9985', '02/25'));
+    litems.add(new Cards('Card Modelo 2', '8877 4458 55662 9985', '04/26'));
   }
+
+  void removeCard(index) {
+    litems.removeAt(index);
+    setState(() {});
+  }
+
+  void addCard(context, Cards card) {
+    litems.add(card);
+    setState(() {});
+  }
+
+  
+  
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +57,9 @@ class _RecargarState extends State<Recargar> {
                         Icon(Icons.add)
                       ],
                     ),
+                    onTap: () => {
+                      addCard(context, Cards('Card Add Test', '9988 5574 9856 2541', '04/22'))
+                    },
                   ),
                 ),
                 SizedBox(height: 30.0),
@@ -56,12 +71,23 @@ class _RecargarState extends State<Recargar> {
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
                             elevation: 5.0,
-                            child: ListTile(
-                              isThreeLine: true,
-                              leading: Icon(Icons.credit_card),
-                              title: Text(litems[index].name),
-                              subtitle: Text(litems[index].number),
-                              trailing: IconButton(icon: Icon(Icons.more_vert), onPressed: () => {})
+                            child: Dismissible(
+                                  key: Key(litems[index].number),
+                                  background: Container(
+                                    color: Colors.red,
+                                    child: ListTile(
+                                      trailing: Icon(Icons.delete, color: Colors.black,),
+                                    ),
+                                  ),
+                                  onDismissed: (direction) => {
+                                    litems.removeAt(index),
+                                    setState((){}),
+                                    Scaffold.of(context).showSnackBar(SnackBar(content: Text('Tarjeta Eliminada'), duration: Duration(seconds: 1),) )
+                                  },
+                                  child: ListTile(
+                                    leading: Icon(Icons.credit_card),
+                                    title: Text(litems[index].name),
+                                    subtitle: Text(litems[index].number)),
                             ),
                           ),
                         );
