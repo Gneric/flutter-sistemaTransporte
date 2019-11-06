@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sistema_transporte/src/pages/configuration.dart';
 import 'package:sistema_transporte/src/pages/login.dart';
 import 'package:sistema_transporte/src/pages/login2.dart';
-import 'package:sistema_transporte/src/pages/main.dart';
+import 'package:sistema_transporte/src/pages/mainMenu.dart';
 import 'package:sistema_transporte/src/pages/movements.dart';
 import 'package:sistema_transporte/src/pages/planner.dart';
 import 'package:sistema_transporte/src/pages/recharge.dart';
@@ -23,7 +23,7 @@ class RouteGenerator{
         return MaterialPageRoute(builder: (_) => Register());
       
       case '/principal':
-        return MaterialPageRoute(builder: (_) => Main());
+        return MaterialPageRoute(builder: (_) => MainMenu());
 
       case '/movimientos':
         return MaterialPageRoute(builder: (_) => Movimientos());

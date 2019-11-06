@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_transporte/src/pages/login.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sistema_transporte/src/pages/login2.dart';
+import 'package:sistema_transporte/src/models/user.dart';
 
 class NavigationDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final _user = Provider.of<User>(context);
+
     return new Drawer(
       child: new Column(
         children: <Widget>[
@@ -12,8 +17,8 @@ class NavigationDrawer extends StatelessWidget {
                 Icons.account_circle,
                 size: 80,
               ),
-              accountName: new Text("Oscar Biondi"),
-              accountEmail: new Text("obiondi99@gmail.com"),
+              accountName: new Text("${_user.usuario}"),
+              accountEmail: new Text("${_user.mail}"),
               arrowColor: Colors.white,
               decoration: new BoxDecoration(color: Colors.green)),
           Expanded(
@@ -72,12 +77,20 @@ class NavigationDrawer extends StatelessWidget {
             leading: Icon(Icons.arrow_back_ios, color: Colors.red, size: 30),
             title: Text("Cerrar Sesion", style: TextStyle(color: Colors.red ), ),
             onTap: () => {
-              Navigator.of(context).popUntil(ModalRoute.withName(Navigator.defaultRouteName))
+              clearLoginToken() ,
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+                (Route<dynamic> route) => false)
             },
           ),
           SizedBox(height: 10.0,)
         ],
       ),
     );
+  }
+
+  clearLoginToken() async {
+      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      sharedPreferences.remove('loginToken');
   }
 }

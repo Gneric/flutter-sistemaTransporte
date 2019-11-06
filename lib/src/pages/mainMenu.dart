@@ -1,29 +1,70 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sistema_transporte/src/models/user.dart';
 import 'package:sistema_transporte/src/pages/drawer.dart';
-import 'package:sistema_transporte/src/pages/ui_size.dart';
+import 'package:sistema_transporte/src/utils/ui_size.dart';
 import 'package:sistema_transporte/src/utils/movement_util.dart';
 
-class Main extends StatefulWidget {
-  Main({Key key}) : super(key: key);
+class MainMenu extends StatefulWidget {
+  MainMenu({Key key}) : super(key: key);
 
   @override
-  _MainState createState() => _MainState();
+  _MainMenuState createState() => _MainMenuState();
 }
 
-class _MainState extends State<Main> {
+class _MainMenuState extends State<MainMenu> {
+  
 
+  @override
+  Widget build(BuildContext context) {
+    final _user = Provider.of<User>(context);
+    
+    SizeConfig().init(context); // UI SCALING
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+      ),
+      drawer: NavigationDrawer(),
+      key: scaffoldKey,
+      body: WillPopScope(
+        onWillPop: onWillPop,
+        child: SafeArea(
+          child: Center(
+            child: Container(
+              color: Colors.white,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(0,SizeConfig.blockSizeHorizontal*4,0,0),
+                child: Column(
+                  children: <Widget>[
+                    SizedBox(height: SizeConfig.blockSizeVertical * 2),
+                    welcome(),
+                    SizedBox(height: SizeConfig.blockSizeVertical / 2),
+                    userWelcome('${_user.nombre} ${_user.apep}'),
+                    SizedBox(height: SizeConfig.blockSizeVertical * 5),
+                    currencyBox(),
+                    SizedBox(height: SizeConfig.blockSizeVertical * 6),
+                    movementBox(context),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /* Warning de Salida */
   static const snackBarDuration = Duration(seconds: 2);
-
   final snackBar = SnackBar(
     content: Text('Presione nuevamente para salir de la aplicacion'),
     duration: snackBarDuration,
     backgroundColor:  Colors.red,
   );
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
   DateTime backButtonPressTime;
-
   Future<bool> onWillPop() async {
     DateTime currentTime = DateTime.now();
 
@@ -39,22 +80,23 @@ class _MainState extends State<Main> {
 
     return true;
     }
+  /* ---------------------------------  */
 
   // Data en duro para el menu
-  final currencyBalance = Text(
+  Widget currencyBalance() => Text(
     "S/25.00",
     textAlign: TextAlign.center,
     style: TextStyle(
         color: Colors.green, fontSize: 35, fontWeight: FontWeight.bold),
   );
-  final welcome = Text(
+  Widget welcome() => Text(
     "Bienvenido",
     textAlign: TextAlign.center,
     style: TextStyle(
         color: Colors.black, fontSize: 50, fontWeight: FontWeight.bold ),
   );
-  final userWelcome = Text(
-    "Oscar Biondi",
+  Widget userWelcome(text) => Text(
+    text,
     textAlign: TextAlign.center,
     style: TextStyle(
         color: Colors.black, fontSize: 50, fontWeight: FontWeight.bold),
@@ -62,7 +104,7 @@ class _MainState extends State<Main> {
   //
 
 
-  final currencyBox = Container(
+  Widget currencyBox() => Container(
       margin: EdgeInsets.all(5.0),
       padding: EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 30.0),
       decoration: BoxDecoration(
@@ -123,41 +165,5 @@ class _MainState extends State<Main> {
     );
   } 
 
-  @override
-  Widget build(BuildContext context) {
-    SizeConfig().init(context); // UI SCALING
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.green,
-      ),
-      drawer: NavigationDrawer(),
-      key: scaffoldKey,
-      body: WillPopScope(
-        onWillPop: onWillPop,
-        child: SafeArea(
-          child: Center(
-            child: Container(
-              color: Colors.white,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(0,SizeConfig.blockSizeHorizontal*4,0,0),
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(height: SizeConfig.blockSizeVertical * 2),
-                    welcome,
-                    SizedBox(height: SizeConfig.blockSizeVertical / 2),
-                    userWelcome,
-                    SizedBox(height: SizeConfig.blockSizeVertical * 5),
-                    currencyBox,
-                    SizedBox(height: SizeConfig.blockSizeVertical * 6),
-                    movementBox(context),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+  
 }

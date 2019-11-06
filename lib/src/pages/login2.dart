@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sistema_transporte/src/pages/main.dart';
+import 'package:sistema_transporte/src/models/user.dart';
+import 'package:sistema_transporte/src/pages/mainMenu.dart';
 
 class LoginPage extends StatefulWidget {
   LoginPage({Key key}) : super(key: key);
@@ -42,44 +45,85 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.white, Colors.green[100]],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter)),
-          child: _isLoading ? Center(child: CircularProgressIndicator()) : ListView(
-            children: <Widget>[
-              header(),
-              body(),
-              buttons(),
-            ],
+        key: scaffoldKey,
+        body: WillPopScope(
+            onWillPop: onWillPop,
+            child: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Colors.white, Colors.green[100]],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter)),
+            child: _isLoading ? Center(child: CircularProgressIndicator()) : ListView(
+              children: <Widget>[
+                header(),
+                body(),
+                buttons(),
+              ],
+            ),
           ),
         ),
     );
   }
 
-  TextEditingController emailController = new TextEditingController();
+  TextEditingController userController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController txtResponse = new TextEditingController();
 
-  signIn(String email, String password) async {
-    Map data = {'email': email, 'password': password};
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    var jsonData = null;
-    var response = await http.post("http://127.0.0.1:8080/login", body: data);
-    if (response.statusCode == 200) {
-      jsonData = json.decode(response.body);
-      setState(() {
-        _isLoading = false;
-        sharedPreferences.setString("loginToken", jsonData['loginToken']);
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (BuildContext context) => Main()),
-            (Route<dynamic> route) => false);
-      });
-    } else {
-      errMessage();
+  signIn(String user, String password) async {
+    try{   
+        // Mapear la data para volverla un objeto
+        Map data = {'user': user, 'password': password};
+        //HttpClient para conectarse
+        HttpClient httpClient = new HttpClient();
+        // Request del httpClient
+        HttpClientRequest request = await httpClient.postUrl(Uri.parse('http://192.168.0.16:8080/SIT-api/clientesPost/Login'));
+          request.headers.set('content-type', 'application/json'); //Se vuelve JSON
+          request.add(utf8.encode(json.encode(data)));  // Se hace el enconde    
+        HttpClientResponse response = await request.close();
+        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+        String reply = await response.transform(utf8.decoder).join();
+
+        var jsonData = null;
+        print("response Code: " + response.statusCode.toString());
+
+
+        if (response.statusCode<400 && response.statusCode>200) {     
+          jsonData = json.decode(reply);
+          setState(() {
+            final user = Provider.of<User>(context);
+            _isLoading = false;
+            sharedPreferences.setString("loginToken", jsonData['dni_CLIENTE']);
+            print(sharedPreferences.get("loginToken"));
+            user.storeUser(jsonData);
+            user.printUser();
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (BuildContext context) => MainMenu()),
+                (Route<dynamic> route) => false);
+          });
+        } else {
+          setState(() {
+              _isLoading = false;
+              scaffoldKey.currentState.showSnackBar(SnackBar(
+                content: Text('Error de statusCode de respuesta'),
+                duration: Duration(seconds: 2),
+                backgroundColor:  Colors.red
+              ));
+          }); 
+        }
+        httpClient.close();
+        print(jsonData);
     }
+    catch(Exception){
+      setState(() {
+              _isLoading = false;
+              scaffoldKey.currentState.showSnackBar(SnackBar(
+                content: Text('Error al tratar de conectarse'),
+                duration: Duration(seconds: 2),
+                backgroundColor:  Colors.red
+              ));
+      }); 
+    } 
   }
 
   Widget header() {
@@ -96,7 +140,7 @@ class _LoginPageState extends State<LoginPage> {
       margin: EdgeInsets.only(top: 30.0),
       child: Column(
         children: <Widget>[
-          txtEmail("Email", Icons.email),
+          txtUser("Usuario", Icons.person),
           SizedBox(height: 30.0),
           txtPassword("Contraseña", Icons.lock)
         ],
@@ -104,9 +148,9 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget txtEmail(String title, IconData icon) {
+  Widget txtUser(String title, IconData icon) {
     return TextFormField(
-      controller: emailController,
+      controller: userController,
       obscureText: false,
       decoration: InputDecoration(hintText: title, icon: Icon(icon)),
     );
@@ -121,12 +165,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   errMessage() {
-    SnackBar snackBar = SnackBar(
-      content: Text('Error de credenciales'),
-      duration: snackBarDuration,
-      backgroundColor:  Colors.red
-    );
-    scaffoldKey.currentState.showSnackBar(snackBar);
+    
   }
 
   Widget buttons() {
@@ -143,11 +182,11 @@ class _LoginPageState extends State<LoginPage> {
             child: Text("Ingresar", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
             onPressed: () {
               setState(() {_isLoading = true;});
-              signIn(emailController.text, passwordController.text);
+              signIn(userController.text, passwordController.text);
             },
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0))
           ),
-          SizedBox(height: 15),
+          SizedBox(height: 35),
           RawMaterialButton(
             constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width, minHeight: 50),
             fillColor: Colors.green[300],
