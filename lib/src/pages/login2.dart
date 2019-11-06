@@ -86,8 +86,6 @@ class _LoginPageState extends State<LoginPage> {
 
         var jsonData = null;
         print("response Code: " + response.statusCode.toString());
-
-
         if (response.statusCode<400 && response.statusCode>200) {     
           jsonData = json.decode(reply);
           setState(() {
@@ -97,9 +95,26 @@ class _LoginPageState extends State<LoginPage> {
             print(sharedPreferences.get("loginToken"));
             user.storeUser(jsonData);
             user.printUser();
-            Navigator.of(context).pushAndRemoveUntil(
+            try{
+              // AQUI INTENTO LISTAR LOS MOVIMIENTOS DE SUS TARJETAS
+
+              /*
+              Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (BuildContext context) => MainMenu()),
                 (Route<dynamic> route) => false);
+              */
+            }
+            catch(Exception){
+              setState(() {
+                  _isLoading = false;
+                  scaffoldKey.currentState.showSnackBar(SnackBar(
+                    content: Text('Error de statusCode de respuesta'),
+                    duration: Duration(seconds: 2),
+                    backgroundColor:  Colors.red
+                  ));
+              }); 
+            }
+            
           });
         } else {
           setState(() {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_transporte/src/models/movimientosTarjeta.dart';
 import 'package:sistema_transporte/src/models/trarjetasTren.dart';
 
 class User extends ChangeNotifier {
@@ -26,6 +27,9 @@ class User extends ChangeNotifier {
     
     List<TarjetasTren> _tarjetas;
       List<TarjetasTren> get tarjetasTren => _tarjetas;
+    
+    List<MovimientosTarjeta> _movimientos;
+      List<MovimientosTarjeta> get movimientos => _movimientos;
 
     User(){}
 
@@ -50,5 +54,13 @@ class User extends ChangeNotifier {
       _tarjetas = json['tarjetas'];
       notifyListeners();
     }
+
+  /*
+    void addMovimientos(Map<String, dynamic> movimientos){
+      for( MovimientosTarjeta mov in movimientos ){
+        _movimientos.add(mov);
+      }
+    }
+  */
 
 }

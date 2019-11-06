@@ -1,9 +1,11 @@
 import 'dart:ffi';
 
+import 'package:sistema_transporte/src/models/movimientosTarjeta.dart';
+
 class TarjetasTren {
-    
-  String _codigo;
-      String get codigo => _codigo;
+
+  String _codigoTarjeta;
+      String get codigo => _codigoTarjeta;
 
   String _perfil;
       String get perfil => _perfil;
