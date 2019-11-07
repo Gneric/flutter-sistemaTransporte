@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sistema_transporte/src/models/trarjetasTren.dart';
 import 'package:sistema_transporte/src/models/user.dart';
 import 'package:sistema_transporte/src/pages/mainMenu.dart';
 
@@ -69,52 +70,85 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController userController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController txtResponse = new TextEditingController();
+  /*
+  recopilarDatosTarjeta(TarjetasTren tarjeta) async {
+      print("Recopilando datos de tarjeta "+tarjeta.codigo);
+      HttpClient httpClient = new HttpClient();
+      String endPoint = "http://192.168.0.16:8080/SIT-api/operacionesGet/operaciones/${tarjeta.codigo}";
+      HttpClientRequest request = await httpClient.getUrl(Uri.parse(endPoint));
+        request.headers.set('content-type', 'application/json');
+      HttpClientResponse response = await request.close();
+      String reply = await response.transform(utf8.decoder).join();
+      var jsonMovimientos = null;
+      if(response.statusCode<400 && response.statusCode>200){
+          jsonMovimientos = json.decode(reply);
+          final user = Provider.of<User>(context);
+          user.addMovimientos(jsonMovimientos);
+      }
+      else {
+        setState(() {
+              _isLoading = false;
+              scaffoldKey.currentState.showSnackBar(SnackBar(
+                content: Text('Error de carga de Movimientos'),
+                duration: Duration(seconds: 2),
+                backgroundColor:  Colors.red
+              ));
+          }); 
+      }
+  }*/
 
-  signIn(String user, String password) async {
-    try{   
-        // Mapear la data para volverla un objeto
+  Future signIn(String user, String password) async {
+    try{  
         Map data = {'user': user, 'password': password};
-        //HttpClient para conectarse
         HttpClient httpClient = new HttpClient();
-        // Request del httpClient
         HttpClientRequest request = await httpClient.postUrl(Uri.parse('http://192.168.0.16:8080/SIT-api/clientesPost/Login'));
           request.headers.set('content-type', 'application/json'); //Se vuelve JSON
           request.add(utf8.encode(json.encode(data)));  // Se hace el enconde    
         HttpClientResponse response = await request.close();
-        SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+        //SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
         String reply = await response.transform(utf8.decoder).join();
-
-        var jsonData = null;
+        var jsonData;
         print("response Code: " + response.statusCode.toString());
+        
         if (response.statusCode<400 && response.statusCode>200) {     
           jsonData = json.decode(reply);
-          setState(() {
-            final user = Provider.of<User>(context);
-            _isLoading = false;
-            sharedPreferences.setString("loginToken", jsonData['dni_CLIENTE']);
-            print(sharedPreferences.get("loginToken"));
-            user.storeUser(jsonData);
-            user.printUser();
-            try{
-              // AQUI INTENTO LISTAR LOS MOVIMIENTOS DE SUS TARJETAS
+          setState(() {      
+            //sharedPreferences.setString("loginToken", jsonData['dni_CLIENTE']);
+            //print(sharedPreferences.get("loginToken"));
+            List<TarjetasTren> lista;
+            /*
+            for (var i = 0; i < jsonData['tarjetas'].length; i++) {
+                Map<String, dynamic> tarjetaMap = jsonData['tarjetas'][i];
+                TarjetasTren tarjeta = new TarjetasTren.fromJson(tarjetaMap);
+                  print(tarjetaMap);
+                  print(tarjeta.fechaCaducidad);
+                  print(tarjeta.fechaEmision);
+                  print(tarjeta.saldoTarjeta);
+                  print(tarjeta.codigoTarjeta);
+                  print(tarjeta.estadoTarjeta);
+                  print(tarjeta.perfilTarjeta);
+                  print(tarjeta.usuarioTarjeta);
+                  print("This this doesnt work");
+                  lista.add(tarjeta);
 
-              /*
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (BuildContext context) => MainMenu()),
-                (Route<dynamic> route) => false);
-              */
-            }
-            catch(Exception){
-              setState(() {
-                  _isLoading = false;
-                  scaffoldKey.currentState.showSnackBar(SnackBar(
-                    content: Text('Error de statusCode de respuesta'),
-                    duration: Duration(seconds: 2),
-                    backgroundColor:  Colors.red
-                  ));
-              }); 
-            }
+                  if(i == jsonData['tarjetas'] ){
+                    print(lista);
+                  }                  
+            } */
+            jsonData['tarjetas'].map( (row) => {
+                lista.add(new TarjetasTren.fromJson(row))
+            });
+            print("Lista");
+            print(lista);
+            print("-----------");
             
+            User.storeUser(jsonData, lista);
+            httpClient.close();
+            print("Cerro httpClient");
+            _isLoading = false;
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (BuildContext context) => MainMenu()),
+              (Route<dynamic> route) => false); 
           });
         } else {
           setState(() {
@@ -137,8 +171,9 @@ class _LoginPageState extends State<LoginPage> {
                 duration: Duration(seconds: 2),
                 backgroundColor:  Colors.red
               ));
-      }); 
-    } 
+              
+      });     
+    }   
   }
 
   Widget header() {
