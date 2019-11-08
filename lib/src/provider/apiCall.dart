@@ -1,37 +1,49 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:sistema_transporte/src/models/trarjetasTren.dart';
+import 'package:sistema_transporte/src/models/movimientosTarjeta.dart';
 import 'package:sistema_transporte/src/models/user.dart';
-import 'package:http/http.dart' as http;
 
 class ApiCall {
 
   Future<User> getFileUser(String user, String password) async {
-    Map data = {'user': user, 'password': password};
-    final url = "http://192.168.0.16:8080/SIT-api/clientesPost/Login";
-    final response = await http
-    .post(url, headers: {HttpHeaders.contentTypeHeader: 'application/json'}, body: data );
+    
+      //print("Mapeando data de User [ user: $user and password: $password ]");
+      Map data = {"user": user, "password": password};
+      //print(data);
+      String url = 'http://192.168.0.16:8080/SIT-api/clientesPost/Login';
+      HttpClient httpClient = new HttpClient();
+      //print("Entrando a HttpClientRequest con el url: $url");
+      HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
+          request.headers.set('content-type', 'application/json');
+          //request.headers.add(HttpHeaders.contentTypeHeader, 'application/json'); 
+          request.add(utf8.encode(json.encode(data)));     
+      HttpClientResponse response = await request.close();
+      var jsonData; 
+      String reply = await response.transform(utf8.decoder).join();
+      jsonData = json.decode(reply);
+      //print("Reply $reply");
+      //print("response status code: ${response.statusCode.toString()}");
 
-    final decodedResponseBody = jsonDecode(response.body);
-    if( response.statusCode > 400  &&  response.statusCode < 200 ){
-      throw Exception('Error getting data list');
-    }   
-    print("Final Response $decodedResponseBody");
-
-    final listTarjetas = getListTarjetas(decodedResponseBody['tarjetas']);
-
-    return User.storeUser(decodedResponseBody, listTarjetas);
+    
+      return User.fromJson(jsonData);     
   }
 
-  List<TarjetasTren> getListTarjetas(Map json) {
-    List<TarjetasTren> lista;
-    for (var i = 0; i < json.length; i++) {
-      Map tarjetaMap = json[i];
-      var tarjeta = TarjetasTren.fromJson(tarjetaMap);
-      lista.add(tarjeta);
-    }
-    return lista;
-  }
+  Future<List<MovimientosTarjeta>> getListaMovimientos( String codigoTarjeta ) async {
+    HttpClient httpClient = new HttpClient();
+    String url = "http://192.168.0.16:8080/SIT-api/operacionesGet/operaciones/$codigoTarjeta";
+    HttpClientRequest request = await httpClient.getUrl(Uri.parse(url));
+      request.headers.set('content-type', 'application/json');
+    HttpClientResponse response = await request.close();
+    var jsonData;
+    String reply = await response.transform(utf8.decoder).join();
+    jsonData = json.decode(reply);
 
+    final finalResponse = (jsonData as List ).map( (row) {
+      return MovimientosTarjeta.fromJson(row);
+    }).toList();
+
+    print("final Response: $finalResponse");
+
+    return finalResponse;
+  }
 }

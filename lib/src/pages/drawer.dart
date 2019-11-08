@@ -9,6 +9,7 @@ class NavigationDrawer extends StatelessWidget {
   Widget build(BuildContext context) {
     final _user = Provider.of<User>(context);
 
+
     return new Drawer(
       child: new Column(
         children: <Widget>[
@@ -17,8 +18,8 @@ class NavigationDrawer extends StatelessWidget {
                 Icons.account_circle,
                 size: 80,
               ),
-              accountName: new Text("${_user.usuario}"),
-              accountEmail: new Text("${_user.mail}"),
+              accountName: new Text("${_user.getUsuario}"),
+              accountEmail: new Text("${_user.getMail}"),
               arrowColor: Colors.white,
               decoration: new BoxDecoration(color: Colors.green)),
           Expanded(

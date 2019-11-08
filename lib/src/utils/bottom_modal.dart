@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget searchMovement(double saldo, String date, String hora, String mensaje, context) {
+void searchMovement(double saldo, String date, String hora, String mensaje, context) {
   String tipo = saldo < 0 ? "negativo" : "positivo";
 
   final _backgroundColors = <String, Color>{
