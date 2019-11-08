@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sistema_transporte/src/models/user.dart';
 import 'package:sistema_transporte/src/pages/drawer.dart';
 import 'package:sistema_transporte/src/pages/login2.dart';
@@ -30,9 +29,10 @@ class _MainMenuState extends State<MainMenu> {
           new MaterialPageRoute(builder: (BuildContext context) => LoginPage());
       Navigator.of(context).pushReplacement(routeToLogin);
       return null;
-    }
+    }    
   }
 
+  
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context); // UI SCALING
@@ -61,10 +61,69 @@ class _MainMenuState extends State<MainMenu> {
                               children: <Widget>[
                                 SizedBox(
                                     height: SizeConfig.blockSizeVertical * 2),
-                                userWelcomeBox(snapshot.data.getNombre),
+                                Container(
+                                  child: Column(
+                                    children: <Widget>[
+                                      Text("Bienvenido",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 50,
+                                              fontWeight: FontWeight.bold)),
+                                      SizedBox(
+                                          height:
+                                              SizeConfig.blockSizeVertical / 2),
+                                      Text("${snapshot.data.getNombre}",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 50,
+                                              fontWeight: FontWeight.bold))
+                                    ],
+                                  ),
+                                ),
                                 SizedBox(
                                     height: SizeConfig.blockSizeVertical * 4),
-                                currencyBox(),
+                                Container(
+                                    //height: SizeConfig.blockSizeVertical * 25,
+                                    margin: EdgeInsets.all(5.0),
+                                    padding: EdgeInsets.fromLTRB(
+                                        100.0, 20.0, 100.0, 30.0),
+                                    decoration: BoxDecoration(
+                                        border: Border.all(),
+                                        borderRadius: new BorderRadius.all(
+                                            Radius.circular(20.0))),
+                                    child: Column(
+                                      children: <Widget>[
+                                        SizedBox(height: 10.0),
+                                        Text(
+                                          "Tarjeta ${snapshot.data.getTarjetas[0].perfilTarjeta}",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 35,
+                                              color: Colors.black),
+                                        ),
+                                        SizedBox(height: 10.0),
+                                        Text(
+                                          "S/ ${snapshot.data.getTarjetas[1].saldoTarjeta.toString()}",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 50,
+                                              color: Colors.green),
+                                        ),
+                                        SizedBox(height: 5.0),
+                                        Text(
+                                          "Codigo Tarjeta: ${snapshot.data.getTarjetas[1].codigoTarjeta}",
+                                          textAlign: TextAlign.end,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                              color: Colors.black),
+                                        )
+                                      ],
+                                    )),
                                 SizedBox(
                                     height: SizeConfig.blockSizeVertical * 5),
                                 movementBox(context),
@@ -104,74 +163,6 @@ class _MainMenuState extends State<MainMenu> {
     return true;
   }
   /* ---------------------------------*/
-
-  // Data en duro para el menu
-  Widget userWelcomeBox(text) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Text("Bienvenido",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold)),
-          SizedBox(height: SizeConfig.blockSizeVertical / 2),
-          Text("$text",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 50,
-                  fontWeight: FontWeight.bold))
-        ],
-      ),
-    );
-  }
-
-  Widget currencyBox() => FutureBuilder(
-      future: getUser(),
-      builder: (BuildContext context, AsyncSnapshot snapshot) {
-        return snapshot.data == null
-            ? Scaffold(body: Center(child: CircularProgressIndicator()))
-            : Container(
-                //height: SizeConfig.blockSizeVertical * 25,
-                margin: EdgeInsets.all(5.0),
-                padding: EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 30.0),
-                decoration: BoxDecoration(
-                    border: Border.all(),
-                    borderRadius: new BorderRadius.all(Radius.circular(20.0))),
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(height: 10.0),
-                    Text(
-                      "Tarjeta ${snapshot.data.getTarjetas[0].perfilTarjeta}",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 35,
-                          color: Colors.black),
-                    ),
-                    SizedBox(height: 10.0),
-                    Text(
-                      "S/ ${snapshot.data.getTarjetas[0].saldoTarjeta.toString()}",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 50,
-                          color: Colors.green),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      "Codigo Tarjeta: ${snapshot.data.getTarjetas[0].codigoTarjeta}",
-                      textAlign: TextAlign.end,
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                          color: Colors.black),
-                    )
-                  ],
-                ));
-      });
 
   Widget movementBox(context) {
     return Expanded(

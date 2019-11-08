@@ -1,4 +1,5 @@
 class MovimientosTarjeta {
+  
   int codigoOperacion;
   String codigoTarjeta;
   String fechaMovimiento;

@@ -7,9 +7,11 @@ import 'package:sistema_transporte/src/models/user.dart';
 class NavigationDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    
+
     final _user = Provider.of<User>(context);
 
-
+    print("User DNI: ${_user.getDni}");
     return new Drawer(
       child: new Column(
         children: <Widget>[
