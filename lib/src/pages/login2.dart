@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
   final snackBar = SnackBar(
     content: Text('Presione nuevamente para salir de la aplicacion'),
     duration: snackBarDuration,
-    backgroundColor:  Colors.red,
+    backgroundColor: Colors.red,
   );
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -32,8 +32,8 @@ class _LoginPageState extends State<LoginPage> {
   Future<bool> onWillPop() async {
     DateTime currentTime = DateTime.now();
     bool backButtonHasNotBeenPressedOrSnackBarHasBeenClosed =
-         backButtonPressTime == null ||
-         currentTime.difference(backButtonPressTime) > snackBarDuration;
+        backButtonPressTime == null ||
+            currentTime.difference(backButtonPressTime) > snackBarDuration;
 
     if (backButtonHasNotBeenPressedOrSnackBarHasBeenClosed) {
       backButtonPressTime = currentTime;
@@ -46,24 +46,26 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        key: scaffoldKey,
-        body: WillPopScope(
-            onWillPop: onWillPop,
-            child: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    colors: [Colors.white, Colors.green[100]],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter)),
-            child: _isLoading ? Center(child: CircularProgressIndicator()) : ListView(
-              children: <Widget>[
-                header(),
-                body(),
-                buttons(),
-              ],
-            ),
-          ),
+      key: scaffoldKey,
+      body: WillPopScope(
+        onWillPop: onWillPop,
+        child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.white, Colors.green[100]],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter)),
+          child: _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : ListView(
+                  children: <Widget>[
+                    header(),
+                    body(),
+                    buttons(),
+                  ],
+                ),
         ),
+      ),
     );
   }
 
@@ -96,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
           }); 
       }
   }*/
-
+  /*
   Future signIn(String user, String password) async {
     try{  
         Map data = {'user': user, 'password': password};
@@ -116,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
             //sharedPreferences.setString("loginToken", jsonData['dni_CLIENTE']);
             //print(sharedPreferences.get("loginToken"));
             List<TarjetasTren> lista;
-            /*
+            
             for (var i = 0; i < jsonData['tarjetas'].length; i++) {
                 Map<String, dynamic> tarjetaMap = jsonData['tarjetas'][i];
                 TarjetasTren tarjeta = new TarjetasTren.fromJson(tarjetaMap);
@@ -134,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
                   if(i == jsonData['tarjetas'] ){
                     print(lista);
                   }                  
-            } */
+            } 
             jsonData['tarjetas'].map( (row) => {
                 lista.add(new TarjetasTren.fromJson(row))
             });
@@ -174,7 +176,7 @@ class _LoginPageState extends State<LoginPage> {
               
       });     
     }   
-  }
+  }*/
 
   Widget header() {
     return Container(
@@ -214,9 +216,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  errMessage() {
-    
-  }
+  errMessage() {}
 
   Widget buttons() {
     return Container(
@@ -227,29 +227,37 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         children: <Widget>[
           RawMaterialButton(
-            constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width, minHeight: 50),
-            fillColor: Colors.green[300],
-            child: Text("Ingresar", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-            onPressed: () {
-              setState(() {_isLoading = true;});
-              signIn(userController.text, passwordController.text);
-            },
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0))
-          ),
+              constraints: BoxConstraints(
+                  minWidth: MediaQuery.of(context).size.width, minHeight: 50),
+              fillColor: Colors.green[300],
+              child: Text(
+                "Ingresar",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+                var route = new MaterialPageRoute(
+                  builder: (BuildContext context) => MainMenu(
+                      user: userController.text,
+                      password: passwordController.text),
+                );
+                Navigator.of(context).pushReplacement(route);
+              },
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0))),
           SizedBox(height: 35),
           RawMaterialButton(
-            constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width, minHeight: 50),
-            fillColor: Colors.green[300],
-            child: Text("Registrarse", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-            onPressed: () {
-              
-            },
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0))
-          )
+              constraints: BoxConstraints(
+                  minWidth: MediaQuery.of(context).size.width, minHeight: 50),
+              fillColor: Colors.green[300],
+              child: Text(
+                "Registrarse",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {},
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0)))
         ],
       ),
     );
   }
-
-
 }
