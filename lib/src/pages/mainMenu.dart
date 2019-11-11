@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_transporte/src/models/user.dart';
 import 'package:sistema_transporte/src/pages/drawer.dart';
-import 'package:sistema_transporte/src/pages/login2.dart';
-import 'package:sistema_transporte/src/provider/apiCall.dart';
+import 'package:sistema_transporte/src/pages/login.dart';
+import 'package:sistema_transporte/src/provider/userProvider.dart';
 import 'package:sistema_transporte/src/utils/ui_size.dart';
 import 'package:sistema_transporte/src/utils/movement_util.dart';
 
@@ -17,11 +17,11 @@ class MainMenu extends StatefulWidget {
 }
 
 class _MainMenuState extends State<MainMenu> {
-  ApiCall api = ApiCall();
+  UserProvider userProvider = UserProvider();
 
   Future<User> getUser() async {
     try {
-      var usuario = await api.getFileUser(widget.user, widget.password);
+      var usuario = await userProvider.getFileUser(widget.user, widget.password);
       return usuario;
     } catch (e) {
       print("Error: " + e.toString());

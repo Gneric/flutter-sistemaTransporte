@@ -1,129 +1,149 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_transporte/src/pages/mainMenu.dart';
 
-class Login extends StatefulWidget {
-  Login({Key key}) : super(key: key);
+class LoginPage extends StatefulWidget {
+  final String mensaje;
 
-  _LoginState createState() => _LoginState();
+  LoginPage({Key key, this.mensaje}) : super(key: key);
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginState extends State<Login> {
-  TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 20.0);
-
+class _LoginPageState extends State<LoginPage> {
+  DateTime backButtonPressTime;
   static const snackBarDuration = Duration(seconds: 2);
-
-  final snackBar = SnackBar(
-    content: Text('Presione nuevamente para salir de la aplicacion'),
-    duration: snackBarDuration,
-    backgroundColor:  Colors.red,
-  );
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  DateTime backButtonPressTime;
+  snackBar(msg){
+    return SnackBar(
+      content: Text(msg),
+      duration: snackBarDuration,
+      backgroundColor: Colors.red,
+    );
+  }
 
   Future<bool> onWillPop() async {
     DateTime currentTime = DateTime.now();
-
     bool backButtonHasNotBeenPressedOrSnackBarHasBeenClosed =
         backButtonPressTime == null ||
             currentTime.difference(backButtonPressTime) > snackBarDuration;
 
     if (backButtonHasNotBeenPressedOrSnackBarHasBeenClosed) {
       backButtonPressTime = currentTime;
-      scaffoldKey.currentState.showSnackBar(snackBar);
+      scaffoldKey.currentState.showSnackBar(snackBar("Presione nuevamente para salir de la aplicacion"));
       return false;
     }
-
     return true;
-    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final emailField = TextField(
-      obscureText: false,
-      decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Email",
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-    );
-
-    final passwordField = TextField(
-      obscureText: true,
-      decoration: InputDecoration(
-          contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-          hintText: "Password",
-          border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
-    );
-
-    final loginButton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Color(0xff01A0C7),
-      child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {
-          Navigator.of(context).pushReplacementNamed('/principal');
-        },
-        child: Text("Login",
-            textAlign: TextAlign.center,
-            style: style.copyWith(
-                color: Colors.white, fontWeight: FontWeight.bold)),
-      ),
-    );
-
-    final registerButton = Material(
-      elevation: 5.0,
-      borderRadius: BorderRadius.circular(30.0),
-      color: Color(0xff01A0C7),
-      child: MaterialButton(
-        minWidth: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-        onPressed: () {
-          Navigator.of(context).pushNamed('/registrar');
-        },
-        child: Text("Register",
-            textAlign: TextAlign.center,
-            style: style.copyWith(
-                color: Colors.white, fontWeight: FontWeight.bold)),
-      ),
-    );
-
     return Scaffold(
       key: scaffoldKey,
       body: WillPopScope(
         onWillPop: onWillPop,
-        child: Center(
-          child: Container(
-            color: Colors.white,
-            child: Padding(
-              padding: EdgeInsets.all(36.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    height: 155.0,
-                    child: Image.asset(
-                      "assets/LogoSIT.png",
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  SizedBox(height: 45.0),
-                  emailField,
-                  SizedBox(height: 25.0),
-                  passwordField,
-                  SizedBox(height: 35.0),
-                  loginButton,
-                  SizedBox(height: 15.0),
-                  registerButton,
-                ],
-              ),
-            ),
-          ),
+        child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.white, Colors.green[100]],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter)),
+          child: ListView(
+                  children: <Widget>[
+                    header(),
+                    body(),
+                    buttons(),
+                  ],
+                ),
         ),
+      ),
+    );
+  }
+
+  TextEditingController userController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+  TextEditingController txtResponse = new TextEditingController();
+
+  Widget header() {
+    return Container(
+      height: 155.0,
+      margin: EdgeInsets.symmetric(vertical: 50.0),
+      child: Image.asset("assets/LogoSIT.png", fit: BoxFit.contain),
+    );
+  }
+
+  Widget body() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+      margin: EdgeInsets.only(top: 30.0),
+      child: Column(
+        children: <Widget>[
+          txtUser("Usuario", Icons.person),
+          SizedBox(height: 30.0),
+          txtPassword("Contraseña", Icons.lock)
+        ],
+      ),
+    );
+  }
+
+  Widget txtUser(String title, IconData icon) {
+    return TextFormField(
+      controller: userController,
+      obscureText: false,
+      decoration: InputDecoration(hintText: title, icon: Icon(icon)),
+    );
+  }
+
+  Widget txtPassword(String title, IconData icon) {
+    return TextFormField(
+      controller: passwordController,
+      obscureText: true,
+      decoration: InputDecoration(hintText: title, icon: Icon(icon)),
+    );
+  }
+
+  errMessage() {}
+
+  Widget buttons() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      height: 200.0,
+      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+      margin: EdgeInsets.only(top: 30.0),
+      child: Column(
+        children: <Widget>[
+          RawMaterialButton(
+              constraints: BoxConstraints(
+                  minWidth: MediaQuery.of(context).size.width, minHeight: 50),
+              fillColor: Colors.green[300],
+              child: Text(
+                "Ingresar",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {
+                var route = new MaterialPageRoute(
+                  builder: (BuildContext context) => MainMenu(
+                      user: userController.text,
+                      password: passwordController.text),
+                );
+                Navigator.of(context).pushReplacement(route);
+              },
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0))),
+          SizedBox(height: 35),
+          RawMaterialButton(
+              constraints: BoxConstraints(
+                  minWidth: MediaQuery.of(context).size.width, minHeight: 50),
+              fillColor: Colors.green[300],
+              child: Text(
+                "Registrarse",
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              onPressed: () {},
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0)))
+        ],
       ),
     );
   }

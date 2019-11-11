@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_transporte/src/models/user.dart';
-import 'package:sistema_transporte/src/pages/login2.dart';
+import 'package:sistema_transporte/src/pages/login.dart';
 import 'package:sistema_transporte/src/pages/mainMenu.dart';
+import 'package:sistema_transporte/src/provider/userProvider.dart';
 import 'package:sistema_transporte/src/routes/route_generator.dart';
 
 
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
 
     return MultiProvider(
         providers: [
-          ChangeNotifierProvider( builder: (_) => User() )
+          ChangeNotifierProvider( builder: (_) => UserProvider() )
         ],
         child: MaterialApp(
         title: 'Material App',
