@@ -3,8 +3,8 @@ import 'package:sistema_transporte/src/pages/configuration.dart';
 import 'package:sistema_transporte/src/pages/login.dart';
 import 'package:sistema_transporte/src/pages/mainMenu.dart';
 import 'package:sistema_transporte/src/pages/movements.dart';
+import 'package:sistema_transporte/src/pages/payMenu.dart';
 import 'package:sistema_transporte/src/pages/planner.dart';
-import 'package:sistema_transporte/src/pages/recharge.dart';
 import 'package:sistema_transporte/src/pages/register.dart';
 import 'package:sistema_transporte/src/pages/stations.dart';
 

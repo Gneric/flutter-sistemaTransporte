@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_transporte/src/pages/mainMenu.dart';
+import 'package:sistema_transporte/src/pages/signIn.dart';
 
 class LoginPage extends StatefulWidget {
   final String mensaje;
@@ -46,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Container(
           decoration: BoxDecoration(
               gradient: LinearGradient(
-                  colors: [Colors.white, Colors.green[100]],
+                  colors: [Colors.white, Colors.blue[100]],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter)),
           child: ListView(
@@ -116,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
           RawMaterialButton(
               constraints: BoxConstraints(
                   minWidth: MediaQuery.of(context).size.width, minHeight: 50),
-              fillColor: Colors.green[300],
+              fillColor: Colors.blue[300],
               child: Text(
                 "Ingresar",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -135,12 +136,15 @@ class _LoginPageState extends State<LoginPage> {
           RawMaterialButton(
               constraints: BoxConstraints(
                   minWidth: MediaQuery.of(context).size.width, minHeight: 50),
-              fillColor: Colors.green[300],
+              fillColor: Colors.blue[300],
               child: Text(
                 "Registrarse",
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
-              onPressed: () {},
+              onPressed: () {
+                var route = new MaterialPageRoute(builder: (BuildContext context) => SignIn());
+                Navigator.of(context).push(route);
+              },
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5.0)))
         ],

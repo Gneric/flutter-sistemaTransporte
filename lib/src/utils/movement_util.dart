@@ -1,39 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_transporte/src/models/movimientosTarjeta.dart';
 import 'package:sistema_transporte/src/utils/bottom_modal.dart';
 
-Widget movement(double saldo, String date, String hour, String mensaje, context) {
-  
-    String tipo = saldo < 0 ? "negativo":"positivo" ;
+Widget movement(MovimientosTarjeta movimiento, context) {
+
+    String tipo = movimiento.getImporte==0 ? "venta" : movimiento.getImporte < 0 ? "negativo":"positivo" ;
     
     final _soles = <String, String>{
-      "positivo": 'S/ '+saldo.toString()+'0',
-      "negativo": 'S/ '+(saldo).toString().replaceFirst('-', '- ') +'0',
+      "venta": '',
+      "positivo": 'S/ '+ movimiento.getImporte.toString()+'0',
+      "negativo": 'S/ '+ (movimiento.getImporte).toString().replaceFirst('-', '- ') +'0',
     };
 
     final _icons = <String, IconData>{
+      "venta": Icons.star,
       "positivo": Icons.arrow_drop_up,
       "negativo": Icons.arrow_drop_down
     };
 
     final _colors = <String, Color>{
+      "venta": Colors.yellow,
       "positivo": Colors.green,
       "negativo": Colors.red,
     };
 
     final _backgroundColors = <String, Color>{
+      "venta": Colors.yellow[100],
       "positivo": Colors.green[50],
       "negativo": Colors.red[50],
     };
+
+    String titulo = movimiento.getTipoOperacion=="Venta" ? "Bienvenido" : movimiento.getTipoOperacion;
 
     return Card(
       elevation: 0.5,
       color: _backgroundColors[tipo],
       child: ListTile(
         onTap: () {
-          searchMovement(saldo, date, hour, mensaje, context);
+          searchMovement(movimiento, context);
         },
-        title: Text(mensaje),
-        subtitle: Text(date),
+        title: Text("$titulo"),
+        subtitle: Text("${movimiento.fechaMovimiento.replaceAll('-', '/')}"),
         leading: Row(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sistema_transporte/src/models/cards.dart';
+import 'package:sistema_transporte/src/models/trarjetasTren.dart';
+import 'package:sistema_transporte/src/models/user.dart';
 import 'package:sistema_transporte/src/pages/drawer.dart';
+import 'package:sistema_transporte/src/provider/userProvider.dart';
 
 class Recargar extends StatefulWidget {
   Recargar({Key key}) : super(key: key);
@@ -10,15 +14,8 @@ class Recargar extends StatefulWidget {
 }
 
 class _RecargarState extends State<Recargar> {
-  final List<Cards> litems = new List();
-
-  @override
-  void initState() {
-    super.initState();
-    litems.add(new Cards('Card Modelo', '4458 55662 8877 9985', '02/25'));
-    litems.add(new Cards('Card Modelo 2', '8877 4458 55662 9985', '04/26'));
-  }
-
+  var litems;
+ 
   void removeCard(index) {
     litems.removeAt(index);
     setState(() {});
@@ -29,14 +26,19 @@ class _RecargarState extends State<Recargar> {
     setState(() {});
   }
 
-  
-  
-
   @override
   Widget build(BuildContext context) {
+    User user;  
+
+    setState(() {
+      user = Provider.of<UserProvider>(context).getUsuario();
+    });
+
+    TarjetasTren _selectedCard;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.green),
+      appBar: AppBar(backgroundColor: Colors.blue[300]),
       drawer: NavigationDrawer(),
       body: SafeArea(
         child: Padding(
@@ -58,36 +60,33 @@ class _RecargarState extends State<Recargar> {
                       ],
                     ),
                     onTap: () => {
-                      addCard(context, Cards('Card Add Test', '9988 5574 9856 2541', '04/22'))
+                      //addCard(context, Cards('Card Add Test', '9988 5574 9856 2541', '04/22'))
                     },
                   ),
                 ),
                 SizedBox(height: 30.0),
                 Expanded(
                   child: ListView.builder(
-                      itemCount: litems.length,
+                      itemCount: user.getTarjetas.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Card(
                             elevation: 5.0,
                             child: Dismissible(
-                                  key: Key(litems[index].number),
-                                  background: Container(
-                                    color: Colors.red,
-                                    child: ListTile(
-                                      trailing: Icon(Icons.delete, color: Colors.black,),
-                                    ),
-                                  ),
+                                  key: Key(user.getTarjetas[index].getCodigoTarjeta),
+                                  background: Container(color: Colors.red,child: ListTile(trailing: Icon(Icons.delete, color: Colors.black))),
                                   onDismissed: (direction) => {
-                                    litems.removeAt(index),
-                                    setState((){}),
+                                    //setState((){
+                                    //  //user.deleteTarjeta(index);
+                                    //}),
                                     Scaffold.of(context).showSnackBar(SnackBar(content: Text('Tarjeta Eliminada'), duration: Duration(seconds: 1),) )
                                   },
                                   child: ListTile(
+                                    onTap: () => { _selectedCard = user.getTarjetas[index] },
                                     leading: Icon(Icons.credit_card),
-                                    title: Text(litems[index].name),
-                                    subtitle: Text(litems[index].number)),
+                                    title: Text("Tarjeta ${user.getTarjetas[index].getPerfilTarjeta}"),
+                                    subtitle: Text("Codigo: ${user.getTarjetas[index].getCodigoTarjeta}   Saldo: ${user.getTarjetas[index].getSaldoTarjeta}")),
                             ),
                           ),
                         );

@@ -1,12 +1,23 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:sistema_transporte/src/models/movimientosTarjeta.dart';
 
-class MovimientosProvider {
+class MovimientosProvider extends ChangeNotifier {
+  List<MovimientosTarjeta> movimientos;
 
-  Future<List<MovimientosTarjeta>> getListaMovimientos( String codigoTarjeta ) async {
+  void setMovimientos(List<MovimientosTarjeta> values){
+    movimientos = values;
+    notifyListeners();
+  }
+
+  List<MovimientosTarjeta> getMovimientos(){
+    return movimientos;
+  }
+
+  Future<List<MovimientosTarjeta>> getListaMovimientos(String codigoTarjeta) async {
     HttpClient httpClient = new HttpClient();
-    String url = "http://192.168.0.16:8080/SIT-api/operacionesGet/operaciones/$codigoTarjeta";
+    String url = "http://192.168.0.56:8080/SIT-api/operacionesGet/operaciones/$codigoTarjeta";
     HttpClientRequest request = await httpClient.getUrl(Uri.parse(url));
       request.headers.set('content-type', 'application/json');
     HttpClientResponse response = await request.close();
@@ -18,7 +29,7 @@ class MovimientosProvider {
       return MovimientosTarjeta.fromJson(row);
     }).toList();
 
-    print("final Response: $finalResponse");
+    //print("final Response Movimientos: $finalResponse");
 
     return finalResponse;
   }

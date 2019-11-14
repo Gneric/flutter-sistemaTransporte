@@ -4,11 +4,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:sistema_transporte/src/models/user.dart';
 
 class UserProvider extends ChangeNotifier {
-  User _usuario;
-  User get usuario => _usuario;
+  User usuario;
 
-  set setUsuario(User value){
-    _usuario = value;
+
+  User getUsuario(){
+    return usuario;
+  }
+
+  void setUsuario(User value){
+    usuario = value;
+    notifyListeners();
+  }
+
+  void deleteTarjeta(int index){
+    usuario.deleteTarjeta(index);
     notifyListeners();
   }
 
@@ -17,7 +26,7 @@ class UserProvider extends ChangeNotifier {
       //print("Mapeando data de User [ user: $user and password: $password ]"); 
       Map data = {"user": user, "password": password};
       //print(data);
-      String url = 'http://192.168.0.16:8080/SIT-api/clientesPost/Login';
+      String url = 'http://192.168.0.56:8080/SIT-api/clientesPost/Login';
       HttpClient httpClient = new HttpClient();
       //print("Entrando a HttpClientRequest con el url: $url");
       HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
@@ -29,20 +38,8 @@ class UserProvider extends ChangeNotifier {
       String reply = await response.transform(utf8.decoder).join();
       jsonData = json.decode(reply);
       usu = User.fromJson(jsonData);
-        setUsuario = usu; 
       
       return usu; 
   }
-
-  Future<User> getUser() async {
-    User usu;
-    usu = usuario;
-    return usu;
-  }
-  
-
-
-
-
   
 }
