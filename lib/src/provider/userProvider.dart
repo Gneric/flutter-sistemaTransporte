@@ -26,7 +26,7 @@ class UserProvider extends ChangeNotifier {
       //print("Mapeando data de User [ user: $user and password: $password ]"); 
       Map data = {"user": user, "password": password};
       //print(data);
-      String url = 'http://192.168.0.56:8080/SIT-api/clientesPost/Login';
+      String url = 'https://webapi-sit.azurewebsites.net/clientesPost/Login';
       HttpClient httpClient = new HttpClient();
       //print("Entrando a HttpClientRequest con el url: $url");
       HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));

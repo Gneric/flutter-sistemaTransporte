@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:sistema_transporte/src/models/cards.dart';
 import 'package:sistema_transporte/src/models/trarjetasTren.dart';
 import 'package:sistema_transporte/src/models/user.dart';
-import 'package:sistema_transporte/src/pages/drawer.dart';
+import 'package:sistema_transporte/src/pages/CardTransaction/payAmount.dart';
+import 'package:sistema_transporte/src/pages/MainMenu/drawer.dart';
 import 'package:sistema_transporte/src/provider/userProvider.dart';
 
 class Recargar extends StatefulWidget {
@@ -49,7 +50,7 @@ class _RecargarState extends State<Recargar> {
               children: <Widget>[
                 Card(
                   elevation: 10.0,
-                  color: Colors.green[100],
+                  color: Colors.blue[100],
                   child: ListTile(
                     title: Text('Agregar metodo de pago'),
                     leading: Row(
@@ -77,13 +78,13 @@ class _RecargarState extends State<Recargar> {
                                   key: Key(user.getTarjetas[index].getCodigoTarjeta),
                                   background: Container(color: Colors.red,child: ListTile(trailing: Icon(Icons.delete, color: Colors.black))),
                                   onDismissed: (direction) => {
-                                    //setState((){
-                                    //  //user.deleteTarjeta(index);
-                                    //}),
+                                    setState((){
+                                      Provider.of<UserProvider>(context).deleteTarjeta(index);
+                                    }),
                                     Scaffold.of(context).showSnackBar(SnackBar(content: Text('Tarjeta Eliminada'), duration: Duration(seconds: 1),) )
                                   },
                                   child: ListTile(
-                                    onTap: () => { _selectedCard = user.getTarjetas[index] },
+                                    onTap: () => { seleccionaCard(user.getTarjetas[index], context) },
                                     leading: Icon(Icons.credit_card),
                                     title: Text("Tarjeta ${user.getTarjetas[index].getPerfilTarjeta}"),
                                     subtitle: Text("Codigo: ${user.getTarjetas[index].getCodigoTarjeta}   Saldo: ${user.getTarjetas[index].getSaldoTarjeta}")),
@@ -98,5 +99,9 @@ class _RecargarState extends State<Recargar> {
         ),
       ),
     );
+  }
+
+  void seleccionaCard(TarjetasTren tarjeta, context ){
+    payAmount(tarjeta, context);
   }
 }

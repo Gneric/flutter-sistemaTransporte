@@ -17,7 +17,7 @@ class MovimientosProvider extends ChangeNotifier {
 
   Future<List<MovimientosTarjeta>> getListaMovimientos(String codigoTarjeta) async {
     HttpClient httpClient = new HttpClient();
-    String url = "http://192.168.0.56:8080/SIT-api/operacionesGet/operaciones/$codigoTarjeta";
+    String url = "https://webapi-sit.azurewebsites.net/operacionesGet/operaciones/$codigoTarjeta";
     HttpClientRequest request = await httpClient.getUrl(Uri.parse(url));
       request.headers.set('content-type', 'application/json');
     HttpClientResponse response = await request.close();

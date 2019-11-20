@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_transporte/src/provider/registerProvider.dart';
 
 class SignIn extends StatefulWidget {
   SignIn({Key key}) : super(key: key);
@@ -9,28 +10,29 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: scaffoldKey,
       body: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.white, Colors.blue[100]],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter)),
-          child: ListView(
-                  children: <Widget>[
-                    header(),
-                    body(),
-                    buttons(),
-                  ],
-                ),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+                colors: [Colors.white, Colors.blue[100]],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter)),
+        child: ListView(
+          children: <Widget>[
+            header(),
+            body(),
+            buttons(),
+          ],
         ),
+      ),
     );
   }
 
+  TextEditingController nombreController = new TextEditingController();
   TextEditingController userController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   TextEditingController apellidoPaternoController = new TextEditingController();
@@ -55,7 +57,7 @@ class _SignInState extends State<SignIn> {
         children: <Widget>[
           txtNombre("Nombre", Icons.person),
           SizedBox(height: 20.0),
-          txtApellidoPaterno("Apellido Paterno"),          
+          txtApellidoPaterno("Apellido Paterno"),
           SizedBox(height: 20.0),
           txtApellidoMaterno("Apellido Materno"),
           SizedBox(height: 20.0),
@@ -102,7 +104,6 @@ class _SignInState extends State<SignIn> {
       controller: apellidoMaternoController,
       obscureText: false,
       decoration: InputDecoration(hintText: title),
-      
     );
   }
 
@@ -146,16 +147,27 @@ class _SignInState extends State<SignIn> {
       child: Column(
         children: <Widget>[
           RawMaterialButton(
-            constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width, minHeight: 50),
-            fillColor: Colors.blue[300],
-            child: Text("Sign In",style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            onPressed: () {
-                // REGISTRARSE 
-            },
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0))),
+              constraints: BoxConstraints(
+                  minWidth: MediaQuery.of(context).size.width, minHeight: 50),
+              fillColor: Colors.blue[300],
+              child: Text("Sign In",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              onPressed: () {
+                RegisterProvider().registrarUser(
+                    nombreController.text,
+                    apellidoPaternoController.text,
+                    apellidoMaternoController.text,
+                    dniController.text,
+                    telefonoController.text,
+                    mailController.text,
+                    userController.text,
+                    passwordController.text);
+                
+              },
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5.0))),
         ],
       ),
     );
   }
-  
 }

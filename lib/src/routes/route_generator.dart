@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:sistema_transporte/src/pages/configuration.dart';
-import 'package:sistema_transporte/src/pages/login.dart';
-import 'package:sistema_transporte/src/pages/mainMenu.dart';
-import 'package:sistema_transporte/src/pages/movements.dart';
-import 'package:sistema_transporte/src/pages/payMenu.dart';
-import 'package:sistema_transporte/src/pages/planner.dart';
-import 'package:sistema_transporte/src/pages/register.dart';
-import 'package:sistema_transporte/src/pages/stations.dart';
+import 'package:sistema_transporte/src/pages/CardTransaction/payMenu.dart';
+import 'package:sistema_transporte/src/pages/DrawerScreens/configuration.dart';
+import 'package:sistema_transporte/src/pages/DrawerScreens/movements.dart';
+import 'package:sistema_transporte/src/pages/DrawerScreens/planner.dart';
+import 'package:sistema_transporte/src/pages/DrawerScreens/register.dart';
+import 'package:sistema_transporte/src/pages/DrawerScreens/stations.dart';
+import 'package:sistema_transporte/src/pages/LogIn/login.dart';
+import 'package:sistema_transporte/src/pages/MainMenu/mainMenu.dart';
 
 
 class RouteGenerator{
+  
   static Route generateRoute(RouteSettings settings){
 
     switch(settings.name){
