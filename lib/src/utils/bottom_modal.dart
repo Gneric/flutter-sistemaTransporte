@@ -48,7 +48,10 @@ void searchMovement(MovimientosTarjeta movimiento, context) {
       return Padding(padding: const EdgeInsets.all(0),
         child: Container(color: Colors.transparent,
           child: Container(
-          decoration: BoxDecoration(color: _backgroundColors[tipo],borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))),
+          decoration: BoxDecoration(
+            color: movimiento.getCodigoEquipo==null ? Colors.grey[100] : _backgroundColors[tipo],
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))
+          ),
           child: Column(
             children: <Widget>[
               Padding(padding: EdgeInsets.all(10),

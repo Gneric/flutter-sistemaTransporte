@@ -15,7 +15,9 @@ class User {
   String _mail;
    String get getMail => _mail;
   String _usuario;
-   String get getUsuario => _usuario;
+   String get getUsername => _usuario;
+  String _password;
+    String get getPassword => _password;
   List<TarjetasTren> _tarjetas;
    List<TarjetasTren> get getTarjetas => _tarjetas;
   TarjetasTren _currentTarjeta;
@@ -47,6 +49,7 @@ class User {
     _mail = parsedJson['mail_CLIENTE'];
     _telefono = parsedJson['telef_CLIENTE'];
     _usuario = parsedJson['usu_CLIENTE'];
+    _password = parsedJson['pass_CLIENTE'];
     _tarjetas = _toObjectList(parsedJson['tarjetas'], (e) => TarjetasTren.fromJson(e));
     _currentTarjeta = _toObjectList(parsedJson['tarjetas'], (e) => TarjetasTren.fromJson(e))[0];
   }

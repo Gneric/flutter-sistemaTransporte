@@ -35,15 +35,13 @@ class _RecargarState extends State<Recargar> {
       user = Provider.of<UserProvider>(context).getUsuario();
     });
 
-    TarjetasTren _selectedCard;
-
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(backgroundColor: Colors.blue[300]),
+      appBar: AppBar(backgroundColor: Colors.blue[300], title: Text("Escoger Tarjeta a recargar"), centerTitle: true, ),
       drawer: NavigationDrawer(),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding: const EdgeInsets.fromLTRB(5, 20, 5, 20),
           child: Container(
             decoration: BoxDecoration(color: Colors.white),
             child: Column(
@@ -71,23 +69,18 @@ class _RecargarState extends State<Recargar> {
                       itemCount: user.getTarjetas.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Card(
-                            elevation: 5.0,
-                            child: Dismissible(
-                                  key: Key(user.getTarjetas[index].getCodigoTarjeta),
-                                  background: Container(color: Colors.red,child: ListTile(trailing: Icon(Icons.delete, color: Colors.black))),
-                                  onDismissed: (direction) => {
-                                    setState((){
-                                      Provider.of<UserProvider>(context).deleteTarjeta(index);
-                                    }),
-                                    Scaffold.of(context).showSnackBar(SnackBar(content: Text('Tarjeta Eliminada'), duration: Duration(seconds: 1),) )
-                                  },
-                                  child: ListTile(
-                                    onTap: () => { seleccionaCard(user.getTarjetas[index], context) },
-                                    leading: Icon(Icons.credit_card),
-                                    title: Text("Tarjeta ${user.getTarjetas[index].getPerfilTarjeta}"),
-                                    subtitle: Text("Codigo: ${user.getTarjetas[index].getCodigoTarjeta}   Saldo: ${user.getTarjetas[index].getSaldoTarjeta}")),
+                          padding: const EdgeInsets.all(4.0),
+                          child: Container(         
+                            margin: EdgeInsets.all(2.0),                 
+                            child: Card(
+                              elevation: 2.0,
+                              color: Colors.blue[50],
+                              child: ListTile(
+                                      onTap: () => { seleccionaCard(user.getTarjetas[index], context) },
+                                      leading: Icon(Icons.credit_card),
+                                      title: Text("Tarjeta ${user.getTarjetas[index].getPerfilTarjeta}"),
+                                      subtitle: Text("Codigo: ${user.getTarjetas[index].getCodigoTarjeta}   Saldo: ${user.getTarjetas[index].getSaldoTarjeta}")
+                                    ), 
                             ),
                           ),
                         );

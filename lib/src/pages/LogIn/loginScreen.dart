@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:sistema_transporte/src/models/user.dart';
 import 'package:sistema_transporte/src/pages/LogIn/signInScreen.dart';
 import 'package:sistema_transporte/src/pages/MainMenu/mainMenu.dart';
+import 'package:sistema_transporte/src/provider/userProvider.dart';
 
 class LoginPage extends StatefulWidget {
   final String mensaje;
@@ -12,6 +15,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool _isLoading = false;
   DateTime backButtonPressTime;
   static const snackBarDuration = Duration(seconds: 2);
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -40,7 +44,18 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return _isLoading ? 
+      Container(
+      decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.white, Colors.blue[100]],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter)),
+        child: Center(
+          child: CircularProgressIndicator()
+        )
+      )
+    : Scaffold(
       key: scaffoldKey,
       body: WillPopScope(
         onWillPop: onWillPop,
@@ -115,38 +130,44 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         children: <Widget>[
           RawMaterialButton(
-              constraints: BoxConstraints(
-                  minWidth: MediaQuery.of(context).size.width, minHeight: 50),
+              constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width, minHeight: 50),
               fillColor: Colors.blue[300],
-              child: Text(
-                "Ingresar",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              onPressed: () {
-                var route = new MaterialPageRoute(
-                  builder: (BuildContext context) => MainMenu(
-                      user: userController.text,
-                      password: passwordController.text),
-                );
-                Navigator.of(context).pushReplacement(route);
+              child: Text("Ingresar", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold) ),
+              onPressed: () async {
+                setState(() {
+                  _isLoading = true;
+                });
+                UserProvider providerUser = new UserProvider();
+                //Setting the user to Provider
+                  User usuario = await providerUser.getFileUser(userController.text, passwordController.text);
+                  Provider.of<UserProvider>(context, listen: false).setUsuario(usuario);
+                //Getting the user from Provider
+                  var providerUsuario = Provider.of<UserProvider>(context, listen: false).getUsuario();
+                  
+                //Validacion si existe o no el usuario
+                  if(Provider.of<UserProvider>(context, listen: false).getUsuario()!=null){        
+                    var route = new MaterialPageRoute(builder: (BuildContext context) => MainMenu());
+                    Navigator.of(context).pushReplacement(route);
+                  }
+                  else {
+                    setState(() {
+                        _isLoading = false;
+                    });
+                    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Error al loguear"), backgroundColor: Colors.red[100], duration: Duration(seconds: 2)));
+                  }
               },
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0))),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0) )
+          ),
           SizedBox(height: 35),
           RawMaterialButton(
-              constraints: BoxConstraints(
-                  minWidth: MediaQuery.of(context).size.width, minHeight: 50),
+              constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width, minHeight: 50),
               fillColor: Colors.blue[300],
-              child: Text(
-                "Registrarse",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
+              child: Text("Registrarse", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               onPressed: () {
                 var route = new MaterialPageRoute(builder: (BuildContext context) => SignIn());
                 Navigator.of(context).push(route);
               },
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5.0)))
+              shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(5.0) ))
         ],
       ),
     );

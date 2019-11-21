@@ -27,7 +27,7 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                 Icons.account_circle,
                 size: 80,
               ),
-              accountName: new Text("${user.getUsuario}"),
+              accountName: new Text("${user.getUsername}"),
               accountEmail: new Text("${user.getMail}"),
               arrowColor: Colors.white,
               decoration: new BoxDecoration(color: Colors.blue[400])),

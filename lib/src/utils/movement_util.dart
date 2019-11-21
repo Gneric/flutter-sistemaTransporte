@@ -34,7 +34,7 @@ Widget movement(MovimientosTarjeta movimiento, context) {
 
     return Card(
       elevation: 0.5,
-      color: _backgroundColors[tipo],
+      color: movimiento.getCodigoEquipo==null ? Colors.grey[100] : _backgroundColors[tipo],
       child: ListTile(
         onTap: () {
           searchMovement(movimiento, context);

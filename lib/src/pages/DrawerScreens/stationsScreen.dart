@@ -10,8 +10,17 @@ class Estaciones extends StatefulWidget {
 class _EstacionesState extends State<Estaciones> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-       
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue[400],
+        title: Text("Configuracion"),
+        centerTitle: true,
+      ),
+      body: Container(
+        child: Center(
+          child: Text("En construccion"),
+        ),
+      ),
     );
   }
 }

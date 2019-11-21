@@ -16,6 +16,7 @@ class PayMethod extends StatefulWidget {
 }
 
 class _PayMethodState extends State<PayMethod> {
+  bool _isLoading = false;
   RecargaProvider recargaProvider = new RecargaProvider();
   TarjetasTren tarjeta;
   double amount;
@@ -24,20 +25,15 @@ class _PayMethodState extends State<PayMethod> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SafeArea(
+    return _isLoading ? Container(child: Center(child: CircularProgressIndicator()))
+    :Scaffold(
+      appBar: AppBar(backgroundColor: Colors.blue[300], title: Text("Escoger Tarjeta a recargar"), centerTitle: true, ),
+      body: SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
             child: Column(
           children: <Widget>[
-            Container(
-              height: 50,
-              child: Text(
-                "Metodo de Pago",
-                style: TextStyle(color: Colors.blue, fontSize: 25),
-              ),
-            ),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -59,18 +55,27 @@ class _PayMethodState extends State<PayMethod> {
     var medioP = string.substring(string.length - 4);
 
     return GestureDetector(
-          onTap: () async {       
-              var res = await recargaProvider.registrarRecarga(tarjeta.getCodigoTarjeta, medioP, amount);
-              //res == 1 ? Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainMenu(message: "Recarga Procesada",) ) ) : 
-              //           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainMenu(message: "Recarga Fallida  ",) ) ) ;
+          onTap: () async {
+            setState(() {
+              _isLoading = true;
+            });   
+            var res = await recargaProvider.registrarRecarga(tarjeta.getCodigoTarjeta, medioP, amount);
+            setState(() {
+              _isLoading = false;
+            });
+            res == 1 ? Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainMenu(message: "Recarga Procesada",) ) ) : 
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainMenu(message: "Recarga Fallida  ",) ) ) ;
           },
-          child: CreditCardWidget(
-          cardHolderName: creditCard.getCardHoldeName,
-          expiryDate: creditCard.getExpiryDate,
-          cardNumber: creditCard.cardNumber,
-          cvvCode: creditCard.cvvCode,
-          showBackView: false,                     
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(10, 12, 10, 12),
+            child: CreditCardWidget(
+            cardHolderName: creditCard.getCardHoldeName,
+            expiryDate: creditCard.getExpiryDate,
+            cardNumber: creditCard.cardNumber,
+            cvvCode: creditCard.cvvCode,
+            showBackView: false,                     
         ),
+          ),
       );
   }
 }

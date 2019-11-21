@@ -25,6 +25,8 @@ class _MovimientosState extends State<Movimientos> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue[400],
+        title: Text("Movimientos"),
+        centerTitle: true,
       ),
       drawer: NavigationDrawer(),
       backgroundColor: Colors.white,

@@ -10,8 +10,17 @@ class Planeador extends StatefulWidget {
 class _PlaneadorState extends State<Planeador> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-       
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue[400],
+        title: Text("Configuracion"),
+        centerTitle: true,
+      ),
+      body: Container(
+        child: Center(
+          child: Text("En construccion"),
+        ),
+      ),
     );
   }
 }
