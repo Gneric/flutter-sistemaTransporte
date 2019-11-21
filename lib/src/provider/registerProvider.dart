@@ -1,14 +1,8 @@
 
 import 'dart:io';
 import 'dart:convert';
-import 'package:sistema_transporte/src/models/userRegistrar.dart';
 
 class RegisterProvider {
-  UserRegistrar userReg;
-
-  UserRegistrar getUsuarioReg(){
-    return userReg;
-  }
 
   void registrarUser(String nombre, String apellidoP, String apellidoM, String dni, String telefono, String email, String usuario, String contrasena ) async {
 
@@ -40,7 +34,7 @@ class RegisterProvider {
       var jsonData; 
       String reply = await response.transform(utf8.decoder).join();
       jsonData = json.decode(reply);
-      print("jsonData Registrar: $jsonData");
+      print("jsonData registrarUser: $jsonData");
   }
 
 }

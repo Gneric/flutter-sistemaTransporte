@@ -35,7 +35,7 @@ void searchMovement(MovimientosTarjeta movimiento, context) {
   };
 
   String _medioPago = movimiento.medioPago != null ? movimiento.medioPago : "Medio Pago no registrado";
-  String _estacionParadero = movimiento.getNombreParadero != null ? movimiento.getNombreParadero : movimiento.getNombreEstacion;
+  String _estacionParadero = movimiento.getNombreParadero != null ? movimiento.getNombreParadero : movimiento.getNombreEstacion != null ? movimiento.getNombreEstacion : "Recarga Virtual";
   String _fechaMovimiento = movimiento.getFechaMovimiento != null ? movimiento.getFechaMovimiento.replaceAll('-', '/') : "Fecha no registrada";
   String _horaMovimiento = movimiento.getHoraMovimiento ==null ? "Hora no registrada" : 
    int.parse(movimiento.getHoraMovimiento.substring(0,5).split(':')[0]) > 12 ? 

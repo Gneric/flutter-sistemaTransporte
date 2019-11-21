@@ -4,7 +4,7 @@ import 'package:sistema_transporte/src/models/cards.dart';
 import 'package:sistema_transporte/src/models/trarjetasTren.dart';
 import 'package:sistema_transporte/src/models/user.dart';
 import 'package:sistema_transporte/src/pages/CardTransaction/payAmount.dart';
-import 'package:sistema_transporte/src/pages/MainMenu/drawer.dart';
+import 'package:sistema_transporte/src/pages/MainMenu/drawerScreen.dart';
 import 'package:sistema_transporte/src/provider/userProvider.dart';
 
 class Recargar extends StatefulWidget {

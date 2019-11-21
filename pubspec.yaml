@@ -18,6 +18,7 @@ environment:
 
 dependencies:
   shared_preferences: ^0.5.4+3
+  flutter_credit_card: 0.1.1
   provider: ^3.0.0
   flutter:
     sdk: flutter

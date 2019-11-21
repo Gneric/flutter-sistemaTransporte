@@ -2,34 +2,45 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_transporte/src/models/movimientosTarjeta.dart';
 import 'package:sistema_transporte/src/models/user.dart';
-import 'package:sistema_transporte/src/pages/MainMenu/drawer.dart';
-import 'package:sistema_transporte/src/pages/login/login.dart';
+import 'package:sistema_transporte/src/pages/LogIn/loginScreen.dart';
 import 'package:sistema_transporte/src/provider/movimientosProvider.dart';
 import 'package:sistema_transporte/src/provider/userProvider.dart';
 import 'package:sistema_transporte/src/utils/ui_size.dart';
 import 'package:sistema_transporte/src/utils/movement_util.dart';
 
+import 'drawerScreen.dart';
+
 class MainMenu extends StatefulWidget {
   final String user;
   final String password;
+  final String message;
 
-  MainMenu({Key key, this.user, this.password}) : super(key: key);
+  MainMenu({Key key, this.user, this.password, this.message}) : super(key: key);
 
   @override
   _MainMenuState createState() => _MainMenuState();
+
 }
 
 class _MainMenuState extends State<MainMenu> {
+  String mensaje;
   UserProvider userProvider = UserProvider();
   MovimientosProvider movimientosProvider = MovimientosProvider();
 
   Future<User> getUser() async {
+    print("Entrando a getUser()");
     try {
-      var usuario =
-          await userProvider.getFileUser(widget.user, widget.password);
-      Provider.of<UserProvider>(context).setUsuario(usuario);
-      //print("Current Tarjeta: "+Provider.of<UserProvider>(context).getUsuario().getCurrentTarjeta.getCodigoTarjeta);
-      return usuario;
+      var usuario = await userProvider.getFileUser(widget.user, widget.password);
+      if(usuario!=null){
+        var providerUsuario = Provider.of<UserProvider>(context, listen: false);
+
+        providerUsuario.setUsuario(usuario);
+        print("Current Tarjeta: "+providerUsuario.getUsuario().getCurrentTarjeta.getCodigoTarjeta);
+        return providerUsuario.getUsuario();
+      }
+      else{
+        return usuario;
+      }
     } catch (e) {
       print("Error: " + e.toString());
       var routeToLogin =
@@ -40,11 +51,15 @@ class _MainMenuState extends State<MainMenu> {
   }
 
   Future<List<MovimientosTarjeta>> getMovimientos() async {
+    print("Entrando a getMovimientos()");
     try {
-      var movimientos = await movimientosProvider.getListaMovimientos(Provider.of<UserProvider>(context).getUsuario().getCurrentTarjeta.getCodigoTarjeta);
-      Provider.of<MovimientosProvider>(context).setMovimientos(movimientos);
-      //print("Movimientos: ${movimientos.length}");
-      return movimientos;
+      var providerUsuario = Provider.of<UserProvider>(context, listen: false);
+      var providerMovimientos = Provider.of<MovimientosProvider>(context, listen: false);
+
+      var movimientos = await movimientosProvider.getListaMovimientos(providerUsuario.getUsuario().getCurrentTarjeta.getCodigoTarjeta);
+      providerMovimientos.setMovimientos(movimientos);
+      print("Movimientos: ${movimientos.length}");
+      return providerMovimientos.getMovimientos();
     } catch (e) {
       print("Error: " + e.toString());
       return null;
@@ -53,6 +68,25 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
   Widget build(BuildContext context) {
+    if(mensaje!=null){
+      //P r o c e s a d a // 8
+      if(mensaje.substring(8,17)=="Procesada"){
+        scaffoldKey.currentState.showSnackBar(
+          SnackBar(duration: Duration(seconds: 2), content: Text("$mensaje"), backgroundColor: Colors.green[100],)
+        );
+      }
+        
+      //F a l l i d a // 6
+      if(mensaje.substring(8,17)=="Fallida  "){
+        scaffoldKey.currentState.showSnackBar(
+          SnackBar(duration: Duration(seconds: 2), content: Text("$mensaje"), backgroundColor: Colors.red[100],)
+        );
+      }
+    }
+
+
+
+
     SizeConfig().init(context); // UI SCALING
     return FutureBuilder(
         future: getUser(),
@@ -111,7 +145,7 @@ class _MainMenuState extends State<MainMenu> {
                                             color: Colors.blue[400]),
                                       ),
                                       SizedBox(height: 5.0),
-                                      Text("Codigo Tarjeta: ${snapshot.data.getTarjetas[1].codigoTarjeta}",textAlign: TextAlign.end,
+                                      Text("Codigo Tarjeta: ${snapshot.data.getCurrentTarjeta.codigoTarjeta}",textAlign: TextAlign.end,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 15,
@@ -190,30 +224,34 @@ class _MainMenuState extends State<MainMenu> {
               );
         });
   }
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+  static const snackBarDuration = Duration(seconds: 2);
+
+  /* Mensaje de Confirmacion o no de recarga  */
+  
+  
+
 
   /* Warning de Salida */
-  static const snackBarDuration = Duration(seconds: 2);
+  
   final snackBar = SnackBar(
     content: Text('Presione nuevamente para salir de la aplicacion'),
     duration: snackBarDuration,
     backgroundColor: Colors.red,
   );
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  
   DateTime backButtonPressTime;
-  Future<bool> onWillPop() async {
-    DateTime currentTime = DateTime.now();
-
-    bool backButtonHasNotBeenPressedOrSnackBarHasBeenClosed =
-        backButtonPressTime == null ||
-            currentTime.difference(backButtonPressTime) > snackBarDuration;
-
-    if (backButtonHasNotBeenPressedOrSnackBarHasBeenClosed) {
-      backButtonPressTime = currentTime;
-      scaffoldKey.currentState.showSnackBar(snackBar);
-      return false;
+    Future<bool> onWillPop() async {
+      DateTime currentTime = DateTime.now();
+      bool backButtonHasNotBeenPressedOrSnackBarHasBeenClosed =
+          backButtonPressTime == null ||
+              currentTime.difference(backButtonPressTime) > snackBarDuration;
+      if (backButtonHasNotBeenPressedOrSnackBarHasBeenClosed) {
+        backButtonPressTime = currentTime;
+        scaffoldKey.currentState.showSnackBar(snackBar);
+        return false;
+      }
+      return true;
     }
-
-    return true;
-  }
   /* ---------------------------------*/
 }

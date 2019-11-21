@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:sistema_transporte/src/pages/LogIn/login.dart';
+import 'package:sistema_transporte/src/pages/LogIn/loginScreen.dart';
 import 'package:sistema_transporte/src/pages/MainMenu/mainMenu.dart';
 import 'package:sistema_transporte/src/provider/movimientosProvider.dart';
 import 'package:sistema_transporte/src/provider/userProvider.dart';

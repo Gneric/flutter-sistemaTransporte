@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_transporte/src/pages/LogIn/signInScreen.dart';
 import 'package:sistema_transporte/src/pages/MainMenu/mainMenu.dart';
-import 'package:sistema_transporte/src/pages/Login/signIn.dart';
 
 class LoginPage extends StatefulWidget {
   final String mensaje;

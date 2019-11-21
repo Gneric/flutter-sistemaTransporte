@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_transporte/src/pages/CardTransaction/payMenu.dart';
-import 'package:sistema_transporte/src/pages/DrawerScreens/configuration.dart';
-import 'package:sistema_transporte/src/pages/DrawerScreens/movements.dart';
-import 'package:sistema_transporte/src/pages/DrawerScreens/planner.dart';
-import 'package:sistema_transporte/src/pages/DrawerScreens/register.dart';
-import 'package:sistema_transporte/src/pages/DrawerScreens/stations.dart';
-import 'package:sistema_transporte/src/pages/LogIn/login.dart';
+import 'package:sistema_transporte/src/pages/DrawerScreens/configScreen.dart';
+import 'package:sistema_transporte/src/pages/DrawerScreens/movementScreen.dart';
+import 'package:sistema_transporte/src/pages/DrawerScreens/plannerScreen.dart';
+import 'package:sistema_transporte/src/pages/DrawerScreens/registerScreen.dart';
+import 'package:sistema_transporte/src/pages/DrawerScreens/stationsScreen.dart';
+import 'package:sistema_transporte/src/pages/LogIn/loginScreen.dart';
 import 'package:sistema_transporte/src/pages/MainMenu/mainMenu.dart';
 
 
