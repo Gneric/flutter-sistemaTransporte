@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_transporte/src/models/movimientosTarjeta.dart';
+import 'package:sistema_transporte/src/models/trarjetasTren.dart';
 import 'package:sistema_transporte/src/models/user.dart';
 import 'package:sistema_transporte/src/provider/movimientosProvider.dart';
 import 'package:sistema_transporte/src/provider/userProvider.dart';
@@ -21,19 +22,27 @@ class MainMenu extends StatefulWidget {
 
 class _MainMenuState extends State<MainMenu> {
   bool _isLoading = false;
+  bool _isLoadingMovements = true;
   String mensaje;
   UserProvider userProvider = UserProvider();
   MovimientosProvider movimientosProvider = MovimientosProvider();
+  List<TarjetasTren> listTarjeta;
+  int indexTarjeta = 0;
+  int countMovimientos = 0;
 
   Future<List<MovimientosTarjeta>> getMovimientos() async {
     //print("Entrando a getMovimientos()");
     try {
-      var providerUsuario = Provider.of<UserProvider>(context, listen: false);
+      _isLoadingMovements = true;
       var providerMovimientos = Provider.of<MovimientosProvider>(context, listen: false);
-
-      var movimientos = await movimientosProvider.getListaMovimientos(providerUsuario.getUsuario().getCurrentTarjeta.getCodigoTarjeta);
+        //print("DATOS DE LA TARJETA");
+        //print("Conteo de Tarjetas: ${listTarjeta.length}");
+        // print("codigoTarjeta en index $indexTarjeta: ${listTarjeta[indexTarjeta].codigoTarjeta}");
+      var movimientos = await movimientosProvider.getListaMovimientos(listTarjeta[indexTarjeta].codigoTarjeta);
       providerMovimientos.setMovimientos(movimientos);
-      print("Conteo de Movimientos: ${movimientos.length}");
+      countMovimientos = movimientos.length;
+        print("Conteo de Movimientos: ${movimientos.length}");
+      _isLoadingMovements = false;
       return providerMovimientos.getMovimientos();
     } catch (e) {
       print("Error: " + e.toString());
@@ -43,6 +52,10 @@ class _MainMenuState extends State<MainMenu> {
 
   @override
   Widget build(BuildContext context) {
+    
+    var providerUsuario = Provider.of<UserProvider>(context, listen: false);
+    listTarjeta = providerUsuario.getUsuario().getTarjetas;
+
     if(mensaje!=null){
       print("MAINMENU - Message: $mensaje");
       //P r o c e s a d a // 8
@@ -104,7 +117,7 @@ class _MainMenuState extends State<MainMenu> {
                           Container(
                               //height: SizeConfig.blockSizeVertical * 25,
                               margin: EdgeInsets.all(5.0),
-                              padding: EdgeInsets.fromLTRB(100.0, 20.0, 100.0, 30.0),
+                              padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 30.0),
                               decoration: BoxDecoration(
                                   border: Border.all(),
                                   borderRadius: new BorderRadius.all(Radius.circular(20.0))),
@@ -124,84 +137,74 @@ class _MainMenuState extends State<MainMenu> {
                                           _isLoading = false;      
                                         });
                                   },
-                                  child: Column(
-                                  children: <Widget>[
-                                    SizedBox(height: 10.0),
-                                    Text("Tarjeta ${usuario.getUsuario().getCurrentTarjeta.perfilTarjeta}",textAlign: TextAlign.center,
-                                    style: TextStyle( fontWeight: FontWeight.bold, fontSize: 35, color: Colors.black ),
-                                    ),
-                                    SizedBox(height: 10.0),
-                                    Text("S/ ${usuario.getUsuario().getCurrentTarjeta.saldoTarjeta.toString()}",textAlign: TextAlign.center,
-                                      style: TextStyle( fontWeight: FontWeight.bold, fontSize: 50, color: Colors.blue[400] ),
-                                    ),
-                                    SizedBox(height: 5.0),
-                                    Text("Codigo Tarjeta: ${usuario.getUsuario().getCurrentTarjeta.codigoTarjeta}",textAlign: TextAlign.end,
-                                      style: TextStyle( fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black ),
-                                    )
-                                  ],
-                                ),
-                              )),
-                          SizedBox(
-                              height: SizeConfig.blockSizeVertical * 5),
-                          Expanded(
-                            child: FutureBuilder(
-                                future: getMovimientos(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot snapshot) {
-                                  return !snapshot.hasData
-                                      ? Container(
-                                          child: Center(
-                                            child:
-                                                CircularProgressIndicator(),
+                                  child: Row(                                 
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                        GestureDetector(
+                                          onTap: () => { chooseTarjetaMenos() },
+                                          child: Icon(Icons.arrow_back_ios, color: Colors.blue[300])
+                                        ),
+                                        Column(
+                                        children: <Widget>[
+                                          SizedBox(height: 10.0),
+                                          Text("Tarjeta ${listTarjeta[indexTarjeta].perfilTarjeta}",textAlign: TextAlign.center,
+                                          style: TextStyle( fontWeight: FontWeight.bold, fontSize: 35, color: Colors.black ),
                                           ),
-                                        )
-                                      : Container(
-                                          padding: EdgeInsets.fromLTRB(
-                                              10, 10, 10, 15),
+                                          SizedBox(height: 10.0),
+                                          Text("S/ ${listTarjeta[indexTarjeta].saldoTarjeta.toString()}",textAlign: TextAlign.center,
+                                            style: TextStyle( fontWeight: FontWeight.bold, fontSize: 50, color: Colors.blue[400] ),
+                                          ),
+                                          SizedBox(height: 5.0),
+                                          Text("Codigo Tarjeta: ${listTarjeta[indexTarjeta].codigoTarjeta}",textAlign: TextAlign.end,
+                                            style: TextStyle( fontWeight: FontWeight.bold, fontSize: 15, color: Colors.black ),
+                                          )],
+                                      ),
+                                      GestureDetector(
+                                        onTap: () => { chooseTarjetaMas() },
+                                        child: Icon(Icons.arrow_forward_ios, color: Colors.blue[300])
+                                      ),
+                                    ],
+                                  ),
+                              )),
+                          SizedBox(height: SizeConfig.blockSizeVertical * 3),
+                          FutureBuilder(
+                                future: getMovimientos(),
+                                builder: (BuildContext context,AsyncSnapshot snapshot) {
+                                  return !snapshot.hasData ? 
+                                        Container(child: Center(child:CircularProgressIndicator()))
+                                      : _isLoadingMovements ? Container(child: Center(child:CircularProgressIndicator()))
+                                      : Container(padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
                                           decoration: BoxDecoration(
-                                              border: Border(
-                                                  top: BorderSide(
-                                                      color: Colors.black,
-                                                      width: 1.5))),
-                                          child: SingleChildScrollView(
+                                              border: Border(top: BorderSide(color: Colors.black,width: 1.5))),
                                             child: Column(
                                               children: <Widget>[
                                                 Column(
                                                   children: <Widget>[
                                                     Container(
-                                                      margin: EdgeInsets.only(
-                                                          top: SizeConfig
-                                                                  .blockSizeVertical /
-                                                              2.5,
-                                                          bottom: SizeConfig
-                                                                  .blockSizeVertical /
-                                                              2.5),
-                                                      child: Text(
-                                                        "Ultimos Movimientos",
-                                                        textAlign:
-                                                            TextAlign
-                                                                .center,
-                                                        style: TextStyle(
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight
-                                                                  .bold,
-                                                        ),
+                                                      margin: EdgeInsets.only(top: SizeConfig.blockSizeVertical /2.5, bottom: SizeConfig.blockSizeVertical / 2.5),
+                                                      child: Text("Ultimos Movimientos",textAlign:TextAlign.center,
+                                                            style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontWeight: FontWeight.bold,
+                                                            ),
                                                       ),
                                                     ),
-                                                    movement(snapshot.data[0], context),
-                                                    movement(snapshot.data[1], context),
-                                                    movement(snapshot.data[2], context),
-                                                    movement(snapshot.data[3], context),
-                                                    movement(snapshot.data[4], context)
+                                                    Container(
+                                                      constraints: BoxConstraints(
+                                                      maxHeight: 330,
+                                                    ),
+                                                    child: ListView.builder(
+                                                      itemCount: 5,
+                                                      itemBuilder: (BuildContext context, int index){
+                                                        return movement(snapshot.data[index], context);
+                                                      }),
+                                                    ),
                                                   ],
                                                 ),
                                               ],
                                             ),
-                                          ),
                                         );
                                 }),
-                          ),
                         ],
                       ),
                     ),
@@ -214,7 +217,31 @@ class _MainMenuState extends State<MainMenu> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   static const snackBarDuration = Duration(seconds: 2);
 
-  /* Mensaje de Confirmacion o no de recarga  */
+  /* ChooseTarjeta */
+  chooseTarjetaMas(){ 
+    setState(() {
+      if(indexTarjeta >= listTarjeta.length - 1 ){
+        indexTarjeta = 0;
+      }
+      else {
+        indexTarjeta = indexTarjeta + 1;
+      }
+      getMovimientos();
+    });
+  }
+
+  chooseTarjetaMenos(){
+    setState(() {
+      if(indexTarjeta <= 0 ){
+        indexTarjeta = listTarjeta.length - 1;
+      }
+      else {
+        indexTarjeta = indexTarjeta - 1;
+      }
+      getMovimientos();
+    });
+  
+  }
   
   
 

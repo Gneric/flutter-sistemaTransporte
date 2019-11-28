@@ -3,9 +3,9 @@ import 'package:sistema_transporte/src/pages/CardTransaction/payMenu.dart';
 import 'package:sistema_transporte/src/pages/DrawerScreens/configScreen.dart';
 import 'package:sistema_transporte/src/pages/DrawerScreens/movementScreen.dart';
 import 'package:sistema_transporte/src/pages/DrawerScreens/plannerScreen.dart';
-import 'package:sistema_transporte/src/pages/DrawerScreens/stationsScreen.dart';
 import 'package:sistema_transporte/src/pages/LogIn/loginScreen.dart';
 import 'package:sistema_transporte/src/pages/MainMenu/mainMenu.dart';
+import 'package:sistema_transporte/src/pages/Stations/stationsScreen.dart';
 
 
 class RouteGenerator{
