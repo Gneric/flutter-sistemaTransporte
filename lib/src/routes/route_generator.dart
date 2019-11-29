@@ -5,7 +5,6 @@ import 'package:sistema_transporte/src/pages/DrawerScreens/movementScreen.dart';
 import 'package:sistema_transporte/src/pages/DrawerScreens/plannerScreen.dart';
 import 'package:sistema_transporte/src/pages/LogIn/loginScreen.dart';
 import 'package:sistema_transporte/src/pages/MainMenu/mainMenu.dart';
-import 'package:sistema_transporte/src/pages/Stations/stationChargin.dart';
 import 'package:sistema_transporte/src/pages/Stations/stationsScreen.dart';
 
 
@@ -31,7 +30,7 @@ class RouteGenerator{
         return MaterialPageRoute(builder: (_) => Planeador());
 
       case '/estaciones':
-        return MaterialPageRoute(builder: (_) => StationChargin());
+        return MaterialPageRoute(builder: (_) => Estaciones());
 
       case '/configuracion':
         return MaterialPageRoute(builder: (_) => Configuracion());
