@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:sistema_transporte/src/models/station.dart';
 import 'package:sistema_transporte/src/pages/MainMenu/drawerScreen.dart';
 import 'package:sistema_transporte/src/pages/Stations/stationChooser.dart';
 
@@ -15,6 +16,9 @@ class Estaciones extends StatefulWidget {
 }
 
 class _EstacionesState extends State<Estaciones> {
+  List<Station> estacionesTren;
+  List<Station> estacionesMetro;
+  List<Station> estacionesCorredor;
   Completer<GoogleMapController> _controller = Completer();
 
   static final CameraPosition _kGooglePlex = CameraPosition(
@@ -22,11 +26,7 @@ class _EstacionesState extends State<Estaciones> {
     zoom: 12.0,
   );
 
-  static final CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);
+
 
   @override
   Widget build(BuildContext context) {
@@ -53,14 +53,8 @@ class _EstacionesState extends State<Estaciones> {
       ),
     );
   }
-  
-
-  Future<void> _showStations() async {
-    final GoogleMapController controller = await _controller.future;
-    controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  }
 
   _showStationsModal() {
-    chooseStation(context);
+    chooseStation(context, estacionesTren, estacionesMetro, estacionesCorredor);
   }
 }
