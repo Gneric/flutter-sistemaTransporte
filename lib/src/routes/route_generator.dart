@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_transporte/src/pages/CardTransaction/addPayMethod.dart';
 import 'package:sistema_transporte/src/pages/CardTransaction/payMenu.dart';
+import 'package:sistema_transporte/src/pages/DrawerScreens/chatbot.dart';
 import 'package:sistema_transporte/src/pages/DrawerScreens/configScreen.dart';
 import 'package:sistema_transporte/src/pages/DrawerScreens/movementScreen.dart';
-import 'package:sistema_transporte/src/pages/DrawerScreens/plannerScreen.dart';
 import 'package:sistema_transporte/src/pages/LogIn/loginScreen.dart';
 import 'package:sistema_transporte/src/pages/MainMenu/mainMenu.dart';
 import 'package:sistema_transporte/src/pages/Stations/stationsScreen.dart';
@@ -26,8 +27,11 @@ class RouteGenerator{
       case '/recargas':
         return MaterialPageRoute(builder: (_) => Recargar());
 
+      case '/metodoPago':
+        return MaterialPageRoute(builder: (_) => AddPayMethod());
+
       case '/planeador':
-        return MaterialPageRoute(builder: (_) => Planeador());
+        return MaterialPageRoute(builder: (_) => ChatBot());
 
       case '/estaciones':
         return MaterialPageRoute(builder: (_) => Estaciones());

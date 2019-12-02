@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Planeador extends StatefulWidget {
-  Planeador({Key key}) : super(key: key);
+class ChatBot extends StatefulWidget {
+  ChatBot({Key key}) : super(key: key);
 
   @override
-  _PlaneadorState createState() => _PlaneadorState();
+  _ChatBotState createState() => _ChatBotState();
 }
 
-class _PlaneadorState extends State<Planeador> {
+class _ChatBotState extends State<ChatBot> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

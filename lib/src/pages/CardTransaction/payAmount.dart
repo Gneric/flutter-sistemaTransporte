@@ -37,42 +37,37 @@ void payAmount(TarjetasTren tarjeta, context) {
                     ),
                     Divider(thickness: 2.0, color: Colors.black),
                     SizedBox(height: 20),
-                    Card(
-                      child: ListTile(
-                        title: Text(
-                          "S/. 10",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        onTap: () => { Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PayMethod(tarjeta: tarjeta, amount: 10,) )) },
+                    Container(
+                      width: MediaQuery.of(context).size.width / 2,
+                      child: Column(
+                        children: <Widget>[
+                          Card(
+                            child: ListTile(
+                              title: Text("S/. 10",style: TextStyle(fontSize: 20)),
+                              onTap: () => { Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PayMethod(tarjeta: tarjeta, amount: 10,) )) },
+                            ),
+                          ),
+                          Card(
+                            child: ListTile(
+                              title: Text("S/. 20",style: TextStyle(fontSize: 20)),
+                              onTap: () => { Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PayMethod(tarjeta: tarjeta, amount: 20,) )) },
+                            ),
+                          ),
+                          Card(
+                            child: ListTile(
+                              title: Text("S/. 50",style: TextStyle(fontSize: 20)),
+                              onTap: () => { Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PayMethod(tarjeta: tarjeta, amount: 50,) )) },
+                            ),
+                          ),
+                          Card(
+                            child: ListTile(
+                              title: Text("S/. 100",style: TextStyle(fontSize: 20)),
+                              onTap: () => { Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PayMethod(tarjeta: tarjeta, amount: 100,) )) },
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    Card(
-                      child: ListTile(
-                        title: Text(
-                          "S/. 20",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        onTap: () => { Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PayMethod(tarjeta: tarjeta, amount: 20,) )) },
-                      ),
-                    ),
-                    Card(
-                      child: ListTile(
-                        title: Text(
-                          "S/. 50",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        onTap: () => { Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PayMethod(tarjeta: tarjeta, amount: 50,) )) },
-                      ),
-                    ),
-                    Card(
-                      child: ListTile(
-                        title: Text(
-                          "S/. 100",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        onTap: () => { Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PayMethod(tarjeta: tarjeta, amount: 100,) )) },
-                      ),
-                    ),
+                    ) 
                   ],
                 ),
               ),

@@ -65,26 +65,39 @@ class _RecargarState extends State<Recargar> {
                 ),
                 SizedBox(height: 30.0),
                 Expanded(
-                  child: ListView.builder(
-                      itemCount: user.getTarjetas.length,
-                      itemBuilder: (BuildContext context, int index) {
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    children: 
+                      List.generate(user.getTarjetas.length, ( index ){
                         return Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Container(         
-                            margin: EdgeInsets.all(2.0),                 
-                            child: Card(
-                              elevation: 2.0,
-                              color: Colors.blue[50],
-                              child: ListTile(
-                                      onTap: () => { seleccionaCard(user.getTarjetas[index], context) },
-                                      leading: Icon(Icons.credit_card),
-                                      title: Text("Tarjeta ${user.getTarjetas[index].getPerfilTarjeta}"),
-                                      subtitle: Text("Codigo: ${user.getTarjetas[index].getCodigoTarjeta}   Saldo: ${user.getTarjetas[index].getSaldoTarjeta}")
-                                    ), 
+                          padding: const EdgeInsets.all(8.0),
+                          child: RawMaterialButton(
+                            constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width, minHeight: 50),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                Text("Tarjeta ${user.getTarjetas[index].getPerfilTarjeta}", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                                Text("Codigo: ${user.getTarjetas[index].getCodigoTarjeta}", style: TextStyle(fontSize: 15)),
+                                Center(
+                                  child: 
+                                    Text("S/. ${user.getTarjetas[index].getSaldoTarjeta}",
+                                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold) 
+                                  )
+                                )
+                              ],
                             ),
+                            fillColor: 
+                              double.parse(user.getTarjetas[index].getSaldoTarjeta) < 10 ? Colors.red[200] :
+                              double.parse(user.getTarjetas[index].getSaldoTarjeta) < 30 ? Colors.yellow[200] :
+                              Colors.blue[200],
+                            onPressed: () => { seleccionaCard(user.getTarjetas[index], context) },
+                            shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(5.0) ),
+                            
                           ),
                         );
-                      }),
+                      })              
+                  ),
                 ),
               ],
             ),
@@ -97,4 +110,5 @@ class _RecargarState extends State<Recargar> {
   void seleccionaCard(TarjetasTren tarjeta, context ){
     payAmount(tarjeta, context);
   }
+  
 }

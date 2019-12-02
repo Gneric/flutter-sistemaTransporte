@@ -23,12 +23,13 @@ class MainMenu extends StatefulWidget {
 class _MainMenuState extends State<MainMenu> {
   bool _isLoading = false;
   bool _isLoadingMovements = true;
-  String mensaje;
   UserProvider userProvider = UserProvider();
   MovimientosProvider movimientosProvider = MovimientosProvider();
   List<TarjetasTren> listTarjeta;
   int indexTarjeta = 0;
   int countMovimientos = 0;
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+  static const snackBarDuration = Duration(seconds: 2);
 
   Future<List<MovimientosTarjeta>> getMovimientos() async {
     //print("Entrando a getMovimientos()");
@@ -50,30 +51,39 @@ class _MainMenuState extends State<MainMenu> {
     }
   }
 
-  @override
-  Widget build(BuildContext context) {
-    
-    var providerUsuario = Provider.of<UserProvider>(context, listen: false);
-    listTarjeta = providerUsuario.getUsuario().getTarjetas;
-
-    if(mensaje!=null){
-      print("MAINMENU - Message: $mensaje");
+  void showConfirmSnackBar(){
+    if(widget.message!=null){
+      print("MAINMENU - Message: ${widget.message}");
+      final confirmSnackBard =  SnackBar(
+        content: Text('${widget.message}'),
+        duration: snackBarDuration,
+        backgroundColor: Colors.green[100]
+      );
       //P r o c e s a d a // 8
-      if(mensaje.substring(8,17)=="Procesada"){
-        scaffoldKey.currentState.showSnackBar(
-          SnackBar(duration: Duration(seconds: 2), content: Text("$mensaje"), backgroundColor: Colors.green[100],)
-        );
+      if(widget.message.substring(8,17)=="Procesada"){
+        //scaffoldKey.currentState.showSnackBar(confirmSnackBard);
       }
         
       //F a l l i d a // 6
-      if(mensaje.substring(8,17)=="Fallida  "){
-        scaffoldKey.currentState.showSnackBar(
-          SnackBar(duration: Duration(seconds: 2), content: Text("$mensaje"), backgroundColor: Colors.red[100],)
-        );
+      if(widget.message.substring(8,17)=="Fallida  "){
+      final deniedSnackBard =  SnackBar(
+        content: Text('${widget.message}'),
+        duration: snackBarDuration,
+        backgroundColor: Colors.red[100]
+      );
+        //scaffoldKey.currentState.showSnackBar(deniedSnackBard);
       }
     }
+    else {
+      print("Message is NULL bruh");
+    }
+  }
 
-
+  @override
+  Widget build(BuildContext context) {
+    showConfirmSnackBar();
+    var providerUsuario = Provider.of<UserProvider>(context, listen: false);
+    listTarjeta = providerUsuario.getUsuario().getTarjetas;
     var usuario = Provider.of<UserProvider>(context, listen: false);
 
     SizeConfig().init(context); // UI SCALING
@@ -196,7 +206,7 @@ class _MainMenuState extends State<MainMenu> {
                                                     child: ListView.builder(
                                                       itemCount: 5,
                                                       itemBuilder: (BuildContext context, int index){
-                                                        return movement(snapshot.data[index], context);
+                                                        return index >= snapshot.data.length ? Container() : movement(snapshot.data[index], context);
                                                       }),
                                                     ),
                                                   ],
@@ -214,8 +224,7 @@ class _MainMenuState extends State<MainMenu> {
             ),
           );
   }
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-  static const snackBarDuration = Duration(seconds: 2);
+  
 
   /* ChooseTarjeta */
   chooseTarjetaMas(){ 

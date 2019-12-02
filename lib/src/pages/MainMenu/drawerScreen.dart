@@ -66,9 +66,9 @@ class _NavigationDrawerState extends State<NavigationDrawer> {
                           Navigator.of(context).pushNamed('/estaciones')
                         }),
                 new ListTile(
-                    leading: Icon(Icons.departure_board,
+                    leading: Icon(Icons.explore,
                         color: Colors.black, size: 30),
-                    title: Text("Planea un viaje"),
+                    title: Text("Chat bot"),
                     onTap: () => {
                           Navigator.of(context).pop(),
                           Navigator.of(context).pushNamed('/planeador')
