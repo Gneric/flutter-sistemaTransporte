@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_transporte/src/models/creditCard.dart';
-import 'package:sistema_transporte/src/models/credit_card_model.dart';
 import 'package:sistema_transporte/src/models/trarjetasTren.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
-import 'package:sistema_transporte/src/pages/CardTransaction/addPayMethod.dart';
 import 'package:sistema_transporte/src/pages/MainMenu/mainMenu.dart';
 import 'package:sistema_transporte/src/provider/recargaProvider.dart';
 
@@ -18,6 +16,7 @@ class PayMethod extends StatefulWidget {
 }
 
 class _PayMethodState extends State<PayMethod> {
+  Key alertDialogKey = GlobalKey();
   bool _isLoading = false;
   RecargaProvider recargaProvider = new RecargaProvider();
   TarjetasTren tarjeta;
@@ -92,22 +91,30 @@ class _PayMethodState extends State<PayMethod> {
               context: context,
               builder: (BuildContext context) {
                 // return object of type Dialog
-                return AlertDialog(
+                return _isLoading ? 
+                Container(
+                decoration: BoxDecoration(
+                   gradient: LinearGradient( colors: [Colors.white, Colors.blue[100]], begin: Alignment.topCenter, end: Alignment.bottomCenter)),
+                  child: Center(child: CircularProgressIndicator())
+                ) : 
+                AlertDialog(
+                  key: alertDialogKey,
                   title: Text("Mensaje de Confirmacion"),
                   content: Text("Desea confirmar la recarga con la tarjeta $cardHolder"),
                   actions: <Widget>[
                     FlatButton(
                       child: new Text("Confirmar"),
                       onPressed: () async {
+                        
                         setState(() {
                           _isLoading = true;
-                        });   
+                        });
                         var res = await recargaProvider.registrarRecarga(tarjeta.getCodigoTarjeta, medioP, amount);
                         setState(() {
                           _isLoading = false;
                         });
-                        res == 1 ? Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainMenu(message: "Recarga Procesada",) ) ) : 
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainMenu(message: "Recarga Fallida  ",) ) ) ;
+                        res == 1 ? Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => MainMenu(message: "Recarga Procesada"))) : 
+                                   Navigator.push(context, MaterialPageRoute(builder: (BuildContext context) => MainMenu(message: "Recarga Fallida  "))) ;
                       },
                     ),
                     FlatButton(
@@ -134,39 +141,3 @@ class _PayMethodState extends State<PayMethod> {
       );
   }
 }
-
-/*
-showDialog(
-  context: context,
-  builder: (BuildContext context) {
-    // return object of type Dialog
-    return AlertDialog(
-      title: Text("Alert Dialog title"),
-      content: Text("Alert Dialog body"),
-      actions: <Widget>[
-        FlatButton(
-          child: new Text("Confirmar"),
-          onPressed: () async {
-            setState(() {
-              _isLoading = true;
-            });   
-            var res = await recargaProvider.registrarRecarga(tarjeta.getCodigoTarjeta, medioP, amount);
-            setState(() {
-              _isLoading = false;
-            });
-            res == 1 ? Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainMenu(message: "Recarga Procesada",) ) ) : 
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainMenu(message: "Recarga Fallida  ",) ) ) ;
-          },
-        ),
-        FlatButton(
-          child: new Text("Cancelar"),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-      ],
-    );
-  },
-);
-
-*/

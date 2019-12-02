@@ -22,6 +22,7 @@ class UserProvider extends ChangeNotifier {
   }
 
   Future<User> getFileUser(String user, String password) async {
+    try{
       User usu;
       //print("Mapeando data de User [ user: $user and password: $password ]"); 
       Map data = {"user": user, "password": password};
@@ -39,7 +40,13 @@ class UserProvider extends ChangeNotifier {
       jsonData = json.decode(reply);
       usu = User.fromJson(jsonData);
       
-      return usu; 
+      return usu;
+
+    } catch(e){
+      print("Error gil $e");
+      return null;
+    } 
+       
   }
   
 }

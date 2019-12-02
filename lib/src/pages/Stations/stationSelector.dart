@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_transporte/src/models/station.dart';
@@ -121,10 +122,10 @@ void locationSheet(context) {
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: <Widget>[ 
-                                                Icon(Icons.directions_bus), 
+                                                Icon(Icons.train), 
                                                 Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Center(child: Text("Estacion ${lstTrenStation[index].getNombreEstacion}")),
+                                                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                                  child: Center(child: AutoSizeText("Estacion ${lstTrenStation[index].getNombreEstacion}", textAlign: TextAlign.center)),
                                                 ) 
                                               ],
                                             ),
@@ -163,10 +164,18 @@ void locationSheet(context) {
                                               print("ESTACION: ${lstMetroStation[index].getNombreEstacion}");
                                               print("LATITUD : ${lstMetroStation[index].getLatitud}");
                                               print("LONGITUD: ${lstMetroStation[index].getLongitud}");
+                                              MaterialPageRoute(
+                                                  builder: (_) => Estaciones(lat: lstMetroStation[index].getLatitud, long: lstMetroStation[index].getLongitud, name: lstMetroStation[index].getNombreEstacion)
+                                              );
                                             },
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
-                                              children: <Widget>[ Icon(Icons.directions_bus), Text("Estacion ${lstMetroStation[index].getNombreEstacion}") ],
+                                              children: <Widget>[ 
+                                                Icon(Icons.directions_bus), 
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                                  child: Center(child: AutoSizeText("Estacion ${lstMetroStation[index].getNombreEstacion}", textAlign: TextAlign.center)),
+                                                ) ],
                                             ),
                                           ),
                                         ),
@@ -203,12 +212,18 @@ void locationSheet(context) {
                                               print("ESTACION: ${lstCorredorStation[index].getNombreEstacion}");
                                               print("LATITUD : ${lstCorredorStation[index].getLatitud}");
                                               print("LONGITUD: ${lstCorredorStation[index].getLongitud}");
+                                              MaterialPageRoute(
+                                                  builder: (_) => Estaciones(lat: lstCorredorStation[index].getLatitud, long: lstCorredorStation[index].getLongitud, name: lstCorredorStation[index].getNombreEstacion)
+                                              );
                                             },
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               children: <Widget>[ 
                                                 Icon(Icons.directions_bus), 
-                                                Center(child: Text("Estacion ${lstCorredorStation[index].getNombreEstacion}")) 
+                                                Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                                                  child: Center(child: AutoSizeText("Estacion ${lstCorredorStation[index].getNombreEstacion}", textAlign: TextAlign.center)),
+                                                ) 
                                               ],
                                             ),
                                           ),

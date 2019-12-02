@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sistema_transporte/src/models/movimientosTarjeta.dart';
-import 'package:sistema_transporte/src/utils/bottom_modal.dart';
+import 'package:sistema_transporte/src/pages/Utils/bottom_modal.dart';
 
 Widget movement(MovimientosTarjeta movimiento, context) {
 

@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:sistema_transporte/src/models/movimientosTarjeta.dart';
 import 'package:sistema_transporte/src/models/trarjetasTren.dart';
 import 'package:sistema_transporte/src/models/user.dart';
+import 'package:sistema_transporte/src/pages/Utils/movement_util.dart';
+import 'package:sistema_transporte/src/pages/Utils/ui_size.dart';
 import 'package:sistema_transporte/src/provider/movimientosProvider.dart';
 import 'package:sistema_transporte/src/provider/userProvider.dart';
-import 'package:sistema_transporte/src/utils/ui_size.dart';
-import 'package:sistema_transporte/src/utils/movement_util.dart';
 
 import 'drawerScreen.dart';
 
@@ -51,37 +51,46 @@ class _MainMenuState extends State<MainMenu> {
     }
   }
 
-  void showConfirmSnackBar(){
+  Future<bool> showConfirmSnackBar() async {
     if(widget.message!=null){
       print("MAINMENU - Message: ${widget.message}");
       final confirmSnackBard =  SnackBar(
-        content: Text('${widget.message}'),
+        content: Text('Mensaje: ${widget.message}', style: TextStyle(color: Colors.black),),
         duration: snackBarDuration,
         backgroundColor: Colors.green[100]
       );
       //P r o c e s a d a // 8
       if(widget.message.substring(8,17)=="Procesada"){
-        //scaffoldKey.currentState.showSnackBar(confirmSnackBard);
+        scaffoldKey.currentState.showSnackBar(confirmSnackBard);
+        return true;
       }
         
       //F a l l i d a // 6
       if(widget.message.substring(8,17)=="Fallida  "){
       final deniedSnackBard =  SnackBar(
-        content: Text('${widget.message}'),
+        content: Text('${widget.message}', style: TextStyle(color: Colors.black)),
         duration: snackBarDuration,
         backgroundColor: Colors.red[100]
       );
-        //scaffoldKey.currentState.showSnackBar(deniedSnackBard);
+        scaffoldKey.currentState.showSnackBar(deniedSnackBard);
+        return true;
       }
     }
     else {
       print("Message is NULL bruh");
+      return false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    showConfirmSnackBar();
+
+    setState(() {
+      if(scaffoldKey!=null){
+        Future<bool> idk = showConfirmSnackBar();
+      }    
+    });
+    
     var providerUsuario = Provider.of<UserProvider>(context, listen: false);
     listTarjeta = providerUsuario.getUsuario().getTarjetas;
     var usuario = Provider.of<UserProvider>(context, listen: false);

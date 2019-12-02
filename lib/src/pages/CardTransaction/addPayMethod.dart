@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_credit_card/flutter_credit_card.dart';
 import 'package:sistema_transporte/src/models/credit_card_model.dart';
-import 'package:sistema_transporte/src/utils/credit_card_form.dart';
+import 'package:sistema_transporte/src/pages/Utils/credit_card_form.dart';
 
 class AddPayMethod extends StatefulWidget {
   AddPayMethod({Key key}) : super(key: key);
