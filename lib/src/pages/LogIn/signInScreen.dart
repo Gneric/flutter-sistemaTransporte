@@ -285,7 +285,7 @@ class _SignInState extends State<SignIn> {
                   setState(() {
                       _isLoading = false;
                   });
-                  scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Error al loguear"), backgroundColor: Colors.red[100], duration: Duration(seconds: 2)));
+                  scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Error al registrar"), backgroundColor: Colors.red[100], duration: Duration(seconds: 2)));
                 }
               },
               shape: RoundedRectangleBorder(

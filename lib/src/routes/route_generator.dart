@@ -16,28 +16,28 @@ class RouteGenerator{
     switch(settings.name){
       
       case '/':
-        return MaterialPageRoute(builder: (_) => LoginPage());
+        return new MaterialPageRoute(builder: (_) => LoginPage());
       
       case '/principal':
-        return MaterialPageRoute(builder: (_) => MainMenu());
+        return new MaterialPageRoute(builder: (_) => MainMenu());
 
       case '/movimientos':
-        return MaterialPageRoute(builder: (_) => Movimientos());
+        return new MaterialPageRoute(builder: (_) => Movimientos());
 
       case '/recargas':
-        return MaterialPageRoute(builder: (_) => Recargar());
+        return new MaterialPageRoute(builder: (_) => Recargar());
 
       case '/metodoPago':
-        return MaterialPageRoute(builder: (_) => AddPayMethod());
+        return new MaterialPageRoute(builder: (_) => AddPayMethod());
 
       case '/planeador':
-        return MaterialPageRoute(builder: (_) => ChatBot());
+        return new MaterialPageRoute(builder: (_) => ChatBot());
 
       case '/estaciones':
-        return MaterialPageRoute(builder: (_) => Estaciones());
+        return new MaterialPageRoute(builder: (_) => Estaciones());
 
       case '/configuracion':
-        return MaterialPageRoute(builder: (_) => Configuracion());
+        return new MaterialPageRoute(builder: (_) => Configuracion());
     }
 
   }

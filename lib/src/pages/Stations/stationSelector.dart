@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sistema_transporte/src/models/station.dart';
 import 'package:sistema_transporte/src/pages/Stations/stationsScreen.dart';
+import 'package:sistema_transporte/src/provider/corredorStationProvider.dart';
 import 'package:sistema_transporte/src/provider/metropolitanoStationProvider.dart';
 import 'package:sistema_transporte/src/provider/trenStationProvider.dart';
 
@@ -54,8 +55,8 @@ void locationSheet(context) {
       try {
         print("Entro a getEstacionesCorredor()");
           _isLoadingCorredor = true;
-          var providerStation = Provider.of<TrenStationProvider>(context, listen: false);
-          var estaciones = await providerStation.getListaEstacionesTren();
+          var providerStation = Provider.of<CorredorStationProvider>(context, listen: false);
+          var estaciones = await providerStation.getListaEstacionesCorredor();
         updateState(() {
           lstCorredorStation = estaciones;
           _isLoadingCorredor = false;

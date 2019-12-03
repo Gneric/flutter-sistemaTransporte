@@ -135,7 +135,7 @@ class _MainMenuState extends State<MainMenu> {
                   child: Container(
                     color: Colors.white,
                     child: Padding(
-                      padding: EdgeInsets.fromLTRB(0, SizeConfig.blockSizeHorizontal * 4, 0, 0),
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Column(
                         children: <Widget>[
                           SizedBox(height: SizeConfig.blockSizeVertical * 2),
@@ -144,15 +144,15 @@ class _MainMenuState extends State<MainMenu> {
                               children: <Widget>[
                                 Text("Bienvenido",textAlign: TextAlign.center,style: TextStyle(color: Colors.black,fontSize: 50, fontWeight: FontWeight.bold)),
                                 SizedBox(height: SizeConfig.blockSizeVertical / 2),
-                                Text("${usuario.getUsuario().getNombre}", textAlign: TextAlign.center, style: TextStyle( color: Colors.black, fontSize: 50, fontWeight: FontWeight.bold))
+                                Text("${usuario.getUsuario().getNombre[0].toUpperCase()}${usuario.getUsuario().getNombre.substring(1)}", textAlign: TextAlign.center, style: TextStyle( color: Colors.black, fontSize: 50, fontWeight: FontWeight.bold))
                               ],
                             ),
                           ),
                           SizedBox(height: SizeConfig.blockSizeVertical * 4),
                           Container(
                               //height: SizeConfig.blockSizeVertical * 25,
-                              margin: EdgeInsets.all(5.0),
-                              padding: EdgeInsets.fromLTRB(20.0, 20.0, 20.0, 30.0),
+                              margin: EdgeInsets.all(15.0),
+                              padding: EdgeInsets.fromLTRB(10.0, 20.0, 10.0, 30.0),
                               decoration: BoxDecoration(
                                   border: Border.all(),
                                   borderRadius: new BorderRadius.all(Radius.circular(20.0))),
@@ -161,7 +161,11 @@ class _MainMenuState extends State<MainMenu> {
                                       
                                   },                                
                                   child: listTarjeta.length < 1 ?
-                                    AutoSizeText("Usted no cuenta con tarjetas",textAlign: TextAlign.center, style: TextStyle( fontWeight: FontWeight.bold, fontSize: 25, color: Colors.black ))
+                                  Container(
+                                    height: MediaQuery.of(context).size.height/9,
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Center(child: AutoSizeText("Usted no cuenta con tarjetas",textAlign: TextAlign.center, style: TextStyle( fontWeight: FontWeight.bold, fontSize: 25, color: Colors.black ))),
+                                  ) 
                                   : Row(                                 
                                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
@@ -169,7 +173,7 @@ class _MainMenuState extends State<MainMenu> {
                                           onTap: () => { chooseTarjetaMenos() },
                                           child: Icon(Icons.arrow_back_ios, color: Colors.blue[300])
                                         ),
-                                         Column(
+                                        Column(
                                         children: <Widget>[
                                           SizedBox(height: 10.0),
                                           Text("Tarjeta ${listTarjeta[indexTarjeta].perfilTarjeta}",textAlign: TextAlign.center,
@@ -195,7 +199,22 @@ class _MainMenuState extends State<MainMenu> {
                           FutureBuilder(
                                 future: getMovimientos(),
                                 builder: (BuildContext context,AsyncSnapshot snapshot) {
-                                  return !snapshot.hasData ? 
+                                  return listTarjeta.length < 1 ? 
+                                        Container(
+                                          height: MediaQuery.of(context).size.height / 2.12,
+                                          child: Center(
+                                            child: 
+                                              RawMaterialButton(
+                                                constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width / 1.5, minHeight: 50),
+                                                fillColor: Colors.blue[200],
+                                                child: Text("Vincula tu tarjeta", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                                onPressed: () {
+                                                  vincularTarjeta(context);
+                                                },
+                                                 shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(5.0) ))                                         
+                                          ),
+                                        )
+                                      : !snapshot.hasData ? 
                                         Container(child: Center(child:CircularProgressIndicator()))
                                       : _isLoadingMovements ? Container(child: Center(child:CircularProgressIndicator()))
                                       : Container(padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
