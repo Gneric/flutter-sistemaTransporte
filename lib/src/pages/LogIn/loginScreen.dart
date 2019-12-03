@@ -6,19 +6,19 @@ import 'package:sistema_transporte/src/pages/MainMenu/mainMenu.dart';
 import 'package:sistema_transporte/src/provider/userProvider.dart';
 
 class LoginPage extends StatefulWidget {
-  final String mensaje;
 
-  LoginPage({Key key, this.mensaje}) : super(key: key);
+  LoginPage({Key key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+  String mensaje;
   bool _isLoading = false;
   DateTime backButtonPressTime;
   static const snackBarDuration = Duration(seconds: 2);
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldState> scaffoldLoginKey = GlobalKey<ScaffoldState>();
 
   snackBar(msg){
     return SnackBar(
@@ -26,6 +26,22 @@ class _LoginPageState extends State<LoginPage> {
       duration: snackBarDuration,
       backgroundColor: Colors.red,
     );
+  }
+
+  Future<bool> onErrorSnackBar(GlobalKey<ScaffoldState> key) async {
+    try{
+      final logError =  SnackBar(
+        content: Text('Error al loguear', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold), textAlign: TextAlign.center, ),
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.red[100]
+      );
+      print("Error al logear: ${scaffoldLoginKey.currentState}");
+      key.currentState.showSnackBar(logError);
+      return true;
+    }catch(e){
+      print("Error onErrorSnackBar: $e");
+      return false;
+    }
   }
 
   Future<bool> onWillPop() async {
@@ -36,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (backButtonHasNotBeenPressedOrSnackBarHasBeenClosed) {
       backButtonPressTime = currentTime;
-      scaffoldKey.currentState.showSnackBar(snackBar("Presione nuevamente para salir de la aplicacion"));
+      scaffoldLoginKey.currentState.showSnackBar(snackBar("Presione nuevamente para salir de la aplicacion"));
       return false;
     }
     return true;
@@ -44,7 +60,10 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _isLoading ? 
+
+    return  Scaffold(
+      key: scaffoldLoginKey,
+      body: _isLoading ? 
       Container(
       decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -55,23 +74,75 @@ class _LoginPageState extends State<LoginPage> {
           child: CircularProgressIndicator()
         )
       )
-    : Scaffold(
-      key: scaffoldKey,
-      body: WillPopScope(
+    : WillPopScope(
         onWillPop: onWillPop,
-        child: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.white, Colors.blue[100]],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter)),
-          child: ListView(
-                  children: <Widget>[
-                    header(),
-                    body(),
-                    buttons(),
-                  ],
-                ),
+        child: SafeArea(
+            child: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    colors: [Colors.white, Colors.blue[100]],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter)),
+            child: ListView(
+                    children: <Widget>[
+                      header(),
+                      body(),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 200.0,
+                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+                        margin: EdgeInsets.only(top: 30.0),
+                        child: Column(
+                          children: <Widget>[
+                            RawMaterialButton(
+                                constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width, minHeight: 50),
+                                fillColor: Colors.blue[300],
+                                child: Text("Ingresar", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold) ),
+                                onPressed: () async {
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  UserProvider providerUser = new UserProvider();
+                                  //Setting the user to Provider
+                                    User usuario = await providerUser.getFileUser(userController.text, passwordController.text);
+                                    Provider.of<UserProvider>(context, listen: false).setUsuario(usuario);
+                                  //Getting the user from Provider
+                                    var providerUsuario = Provider.of<UserProvider>(context, listen: false).getUsuario();
+                                    
+                                  //Validacion si existe o no el usuario
+                                    if(providerUsuario!=null){        
+                                      var route = new MaterialPageRoute(builder: (BuildContext context) => MainMenu());
+                                      Navigator.of(context).pushReplacement(route);
+                                    }
+                                    else {
+                                      setState(() {
+                                          _isLoading = false;
+                                          if(_isLoading==false){
+                                            if(scaffoldLoginKey.currentState!=null){
+                                              Future<bool> idk = onErrorSnackBar(scaffoldLoginKey);
+                                            }
+                                          }
+                                      });
+                                    }
+                                },
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0) )
+                            ),
+                            SizedBox(height: 35),
+                            RawMaterialButton(
+                                constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width, minHeight: 50),
+                                fillColor: Colors.blue[300],
+                                child: Text("Registrarse", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                onPressed: () {
+                                  var route = new MaterialPageRoute(builder: (BuildContext context) => SignIn());
+                                  Navigator.of(context).push(route);
+                                },
+                                shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(5.0) ))
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
         ),
       ),
     );
@@ -121,55 +192,4 @@ class _LoginPageState extends State<LoginPage> {
 
   errMessage() {}
 
-  Widget buttons() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      height: 200.0,
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
-      margin: EdgeInsets.only(top: 30.0),
-      child: Column(
-        children: <Widget>[
-          RawMaterialButton(
-              constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width, minHeight: 50),
-              fillColor: Colors.blue[300],
-              child: Text("Ingresar", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold) ),
-              onPressed: () async {
-                setState(() {
-                  _isLoading = true;
-                });
-                UserProvider providerUser = new UserProvider();
-                //Setting the user to Provider
-                  User usuario = await providerUser.getFileUser(userController.text, passwordController.text);
-                  Provider.of<UserProvider>(context, listen: false).setUsuario(usuario);
-                //Getting the user from Provider
-                  var providerUsuario = Provider.of<UserProvider>(context, listen: false).getUsuario();
-                  
-                //Validacion si existe o no el usuario
-                  if(Provider.of<UserProvider>(context, listen: false).getUsuario()!=null){        
-                    var route = new MaterialPageRoute(builder: (BuildContext context) => MainMenu());
-                    Navigator.of(context).pushReplacement(route);
-                  }
-                  else {
-                    setState(() {
-                        _isLoading = false;
-                    });
-                    scaffoldKey.currentState.showSnackBar(SnackBar(content: Text("Error al loguear"), backgroundColor: Colors.red[100], duration: Duration(seconds: 2)));
-                  }
-              },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0) )
-          ),
-          SizedBox(height: 35),
-          RawMaterialButton(
-              constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width, minHeight: 50),
-              fillColor: Colors.blue[300],
-              child: Text("Registrarse", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              onPressed: () {
-                var route = new MaterialPageRoute(builder: (BuildContext context) => SignIn());
-                Navigator.of(context).push(route);
-              },
-              shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(5.0) ))
-        ],
-      ),
-    );
-  }
 }

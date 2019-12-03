@@ -14,6 +14,8 @@ class TarjetasTren {
   String usuarioTarjeta;
    String get getUsuarioTarjeta => usuarioTarjeta;
 
+  TarjetasTren();
+
   TarjetasTren.fromJson(Map<String, dynamic> parsedJson){
       this.codigoTarjeta = parsedJson['cod_TARJETA'];
       this.perfilTarjeta = parsedJson['desc_TIPO_TARJETA'];

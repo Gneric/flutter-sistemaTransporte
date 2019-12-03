@@ -37,9 +37,9 @@ class _MovimientosState extends State<Movimientos> {
             padding: const EdgeInsets.all(10.0),
             child: Container(
               child: ListView.builder(
-                itemCount: movimientos.length,
+                itemCount: movimientos == null ? 1 : movimientos.length,
                 itemBuilder: (BuildContext context, int index){
-                  return movement(movimientos[index], context);
+                  return movimientos[index] == null ? Container() : movement(movimientos[index], context);
                 }),
               ),
             ),
