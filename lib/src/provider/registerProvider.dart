@@ -23,7 +23,7 @@ class RegisterProvider {
           "telef_CLIENTE": telefono,
           "mail_CLIENTE": email,
           "fech_REGISTRO_CLIENTE": fecha,
-          "estado": 0
+          "estado": 1
         };
 
         String url = 'https://webapi-sit.azurewebsites.net/clientesPost/registro';

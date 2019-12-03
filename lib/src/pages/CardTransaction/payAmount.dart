@@ -13,7 +13,9 @@ void payAmount(TarjetasTren tarjeta, context) {
             color: Colors.transparent,
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.blue[100],
+                  color: double.parse(tarjeta.getSaldoTarjeta) < 10 ? Colors.red[200] :
+                         double.parse(tarjeta.getSaldoTarjeta) < 30 ? Colors.yellow[200] :
+                         Colors.blue[200],
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(10),
                       topRight: Radius.circular(10))),

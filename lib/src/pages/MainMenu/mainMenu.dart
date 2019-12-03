@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sistema_transporte/src/models/movimientosTarjeta.dart';
 import 'package:sistema_transporte/src/models/trarjetasTren.dart';
 import 'package:sistema_transporte/src/models/user.dart';
+import 'package:sistema_transporte/src/pages/MainMenu/linkCard.dart';
 import 'package:sistema_transporte/src/pages/Utils/movement_util.dart';
 import 'package:sistema_transporte/src/pages/Utils/ui_size.dart';
 import 'package:sistema_transporte/src/provider/movimientosProvider.dart';
@@ -56,7 +57,7 @@ class _MainMenuState extends State<MainMenu> {
     if(widget.message!=null){
       print("MAINMENU - Message: ${widget.message}");
       final confirmSnackBard =  SnackBar(
-        content: Text('Mensaje: ${widget.message}', style: TextStyle(color: Colors.black),),
+        content: Text('Mensaje: ${widget.message}', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
         duration: snackBarDuration,
         backgroundColor: Colors.green[100]
       );
@@ -69,7 +70,7 @@ class _MainMenuState extends State<MainMenu> {
       //F a l l i d a // 6
       if(widget.message.substring(8,17)=="Fallida  "){
       final deniedSnackBard =  SnackBar(
-        content: Text('${widget.message}', style: TextStyle(color: Colors.black)),
+        content: Text('${widget.message}', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold), textAlign: TextAlign.center,),
         duration: snackBarDuration,
         backgroundColor: Colors.red[100]
       );
@@ -97,25 +98,39 @@ class _MainMenuState extends State<MainMenu> {
     var usuario = Provider.of<UserProvider>(context, listen: false);
 
     SizeConfig().init(context); // UI SCALING
-    return _isLoading ? 
-    Container(
-      decoration: BoxDecoration(
-        color: Colors.white
-      ),
-      child: Center(
-        child: CircularProgressIndicator()
-      )
-    ) 
-    : Scaffold(
+    return Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
               backgroundColor: Colors.blue[300],
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.refresh),
+                  onPressed: (){
+                    actualizarMainMenu();
+                  },
+                ),
+                IconButton(
+                  icon: Icon(Icons.subtitles),
+                  onPressed: (){
+                    vincularTarjeta(context);
+                  },
+                )
+              ],
             ),
             drawer: NavigationDrawer(),
             key: scaffoldKey,
             body: WillPopScope(
               onWillPop: onWillPop,
-              child: SafeArea(
+              child: _isLoading ? 
+                Container(
+                  decoration: BoxDecoration(
+                   color: Colors.white
+                  ),
+                  child: Center(
+                    child: CircularProgressIndicator()
+                   )
+                ) 
+            : SafeArea(
                 child: Center(
                   child: Container(
                     color: Colors.white,
@@ -143,19 +158,7 @@ class _MainMenuState extends State<MainMenu> {
                                   borderRadius: new BorderRadius.all(Radius.circular(20.0))),
                               child: GestureDetector(
                                   onDoubleTap: () async {
-                                      // Setting the Loading on True for the CircularProgress
-                                        setState(() {
-                                          _isLoading = true;                                     
-                                        });
-                                      // Getting the values of userProvider instance
-                                        User actualUser = Provider.of<UserProvider>(context, listen: false).getUsuario();
-                                        UserProvider userProvider = new UserProvider();
-                                        var newUser = await userProvider.getFileUser(actualUser.getUsername, actualUser.getPassword); 
-                                        userProvider.setUsuario(newUser);                                 
-                                      // Taking out the Circular when the progress is done
-                                        setState(() {
-                                          _isLoading = false;      
-                                        });
+                                      
                                   },                                
                                   child: listTarjeta.length < 1 ?
                                     AutoSizeText("Usted no cuenta con tarjetas",textAlign: TextAlign.center, style: TextStyle( fontWeight: FontWeight.bold, fontSize: 25, color: Colors.black ))
@@ -264,6 +267,19 @@ class _MainMenuState extends State<MainMenu> {
   
   }
   
+
+  actualizarMainMenu() async {
+    setState(() {
+      _isLoading = true;                                     
+    });
+    User actualUser = Provider.of<UserProvider>(context, listen: false).getUsuario();
+    UserProvider userProvider = new UserProvider();
+       var newUser = await userProvider.getFileUser(actualUser.getUsername, actualUser.getPassword); 
+    userProvider.setUsuario(newUser);                                 
+    setState(() {
+       _isLoading = false;      
+    });
+  }
   
 
 

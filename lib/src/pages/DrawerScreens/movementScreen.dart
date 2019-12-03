@@ -16,7 +16,7 @@ class Movimientos extends StatefulWidget {
 class _MovimientosState extends State<Movimientos> {
   @override
   Widget build(BuildContext context) {
-    List<MovimientosTarjeta> movimientos;
+    List<MovimientosTarjeta> movimientos = [];
 
     setState(() {
       movimientos = Provider.of<MovimientosProvider>(context).getMovimientos();
@@ -37,7 +37,7 @@ class _MovimientosState extends State<Movimientos> {
             padding: const EdgeInsets.all(10.0),
             child: Container(
               child: ListView.builder(
-                itemCount: movimientos == null ? 1 : movimientos.length,
+                itemCount: movimientos == null ? 0 : movimientos.length,
                 itemBuilder: (BuildContext context, int index){
                   return movimientos[index] == null ? Container() : movement(movimientos[index], context);
                 }),

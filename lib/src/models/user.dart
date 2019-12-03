@@ -50,8 +50,8 @@ class User {
     _telefono = parsedJson['telef_CLIENTE'];
     _usuario = parsedJson['usu_CLIENTE'];
     _password = parsedJson['pass_CLIENTE'];
-    _tarjetas = parsedJson['tarjetas'] == null ? [] : _toObjectList(parsedJson['tarjetas'], (e) => TarjetasTren.fromJson(e));
-    _currentTarjeta = parsedJson['tarjetas'] == null ? new TarjetasTren() : _toObjectList(parsedJson['tarjetas'], (e) => TarjetasTren.fromJson(e))[0];
+    _tarjetas = parsedJson['tarjetas'].length < 1 ? [] : _toObjectList(parsedJson['tarjetas'], (e) => TarjetasTren.fromJson(e));
+    _currentTarjeta = parsedJson['tarjetas'].length < 1 ? new TarjetasTren() : _toObjectList(parsedJson['tarjetas'], (e) => TarjetasTren.fromJson(e))[0];
   }
 
   List<T> _toObjectList<T>(data, T Function(Map<String, dynamic>) fromJson) {

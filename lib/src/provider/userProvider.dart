@@ -43,7 +43,7 @@ class UserProvider extends ChangeNotifier {
       return usu;
 
     } catch(e){
-      print("Error gil $e");
+      print("Error getFileUser $e");
       return null;
     } 
        

@@ -15,6 +15,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   bool _isLoading = false;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -31,18 +32,20 @@ class _SignInState extends State<SignIn> {
     ) : 
     Scaffold(
       key: scaffoldKey,
-      body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: [Colors.white, Colors.blue[100]],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter)),
-        child: ListView(
-          children: <Widget>[
-            header(),
-            body(),
-            buttons(),
-          ],
+      body: SafeArea(
+              child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.white, Colors.blue[100]],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter)),
+          child: ListView(
+            children: <Widget>[
+              header(),
+              body(),
+              buttons(),
+            ],
+          ),
         ),
       ),
     );
@@ -58,35 +61,60 @@ class _SignInState extends State<SignIn> {
   TextEditingController telefonoController = new TextEditingController();
 
   Widget header() {
-    return Container(
-      height: 155.0,
-      margin: EdgeInsets.fromLTRB(25, 40, 25, 10),
-      child: Image.asset("assets/LogoSIT.png", fit: BoxFit.contain),
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        Container(
+          //height: MediaQuery.of(context).size.height / 7,
+          margin: EdgeInsets.fromLTRB(15, 5, 10, 0),
+          child: Text("Crea tu cuenta",
+          textAlign: TextAlign.center,
+               style: TextStyle(color: Colors.blue, 
+                                fontStyle: FontStyle.italic, 
+                                fontWeight: FontWeight.bold, 
+                                fontSize: 30 )
+                      )
+                  ),
+        Container(
+          height: MediaQuery.of(context).size.height / 7,
+          margin: EdgeInsets.fromLTRB(15, 5, 10, 0),
+          child: Image.asset("assets/LogoSIT.png", fit: BoxFit.contain),
+        ),
+      ],
     );
   }
 
   Widget body() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 25.0),
-      margin: EdgeInsets.only(top: 30.0),
-      child: Column(
-        children: <Widget>[
-          txtNombre("Nombre", Icons.person),
-          SizedBox(height: 20.0),
-          txtApellidoPaterno("Apellido Paterno"),
-          SizedBox(height: 20.0),
-          txtApellidoMaterno("Apellido Materno"),
-          SizedBox(height: 20.0),
-          txtTelefono("Telefono"),
-          SizedBox(height: 20.0),
-          txtDNI("DNI"),
-          SizedBox(height: 20.0),
-          txtMail("E-mail"),
-          SizedBox(height: 20.0),
-          txtUser("Usuario"),
-          SizedBox(height: 20.0),
-          txtPassword("Contraseña")
-        ],
+      margin: EdgeInsets.only(top: 15.0),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: <Widget>[
+            txtNombre("Nombre", Icons.person),
+            SizedBox(height: 20.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                txtApellidoPaterno("Apellido Paterno"),
+                //SizedBox(width: MediaQuery.of(context).size.width /  ),
+                txtApellidoMaterno("Apellido Materno"),
+              ],
+            ),
+            SizedBox(height: 20.0),
+            txtTelefono("Telefono"),
+            SizedBox(height: 20.0),
+            txtDNI("DNI"),
+            SizedBox(height: 20.0),
+            txtMail("E-mail"),
+            SizedBox(height: 20.0),
+            txtUser("Usuario"),
+            SizedBox(height: 20.0),
+            txtPassword("Contraseña")
+          ],
+        ),
       ),
     );
   }
@@ -96,6 +124,15 @@ class _SignInState extends State<SignIn> {
       controller: userController,
       obscureText: false,
       decoration: InputDecoration(hintText: title),
+      validator: (value){
+        if(value.isEmpty){
+          return "El campo usuario es requerido";
+        }
+        if(value.length < 5){
+          return "El usuario debe tener mas de 5 caracteres";
+        }
+        return null;
+      },
     );
   }
 
@@ -104,22 +141,46 @@ class _SignInState extends State<SignIn> {
       controller: nombreController,
       obscureText: false,
       decoration: InputDecoration(hintText: title, icon: Icon(icon)),
+      validator: (value){
+        if(value.isEmpty){
+          return "Por favor ingrese su nombre";
+        }
+        return null;
+      },
     );
   }
 
   Widget txtApellidoPaterno(String title) {
-    return TextFormField(
-      controller: apellidoPaternoController,
-      obscureText: false,
-      decoration: InputDecoration(hintText: title),
+    return Container(
+      width: MediaQuery.of(context).size.width / 2.5,
+      child: TextFormField(
+        controller: apellidoPaternoController,
+        obscureText: false,
+        decoration: InputDecoration(hintText: title),
+        validator: (value){
+          if(value.isEmpty){
+            return "Por favor ingrese su apellido";
+          }
+          return null;
+        },
+      ),
     );
   }
 
   Widget txtApellidoMaterno(String title) {
-    return TextFormField(
-      controller: apellidoMaternoController,
-      obscureText: false,
-      decoration: InputDecoration(hintText: title),
+    return Container(
+      width: MediaQuery.of(context).size.width / 2.5,
+      child: TextFormField(
+        controller: apellidoMaternoController,
+        obscureText: false,
+        decoration: InputDecoration(hintText: title),
+        validator: (value){
+          if(value.isEmpty){
+            return "Por favor ingrese su apellido";
+          }
+          return null;
+        },
+      ),
     );
   }
 
@@ -128,6 +189,12 @@ class _SignInState extends State<SignIn> {
       controller: dniController,
       obscureText: false,
       decoration: InputDecoration(hintText: title),
+      validator: (value){
+        if(value.length!=8){
+          return "Por favor ingrese un DNI Valido";
+        }
+        return null;
+      },
     );
   }
 
@@ -136,6 +203,13 @@ class _SignInState extends State<SignIn> {
       controller: mailController,
       obscureText: false,
       decoration: InputDecoration(hintText: title),
+      validator: (value){
+        if(value.isEmpty){
+          return "Por favor ingrese su mail";
+        }
+        
+        return null;
+      },
     );
   }
 
@@ -144,6 +218,13 @@ class _SignInState extends State<SignIn> {
       controller: telefonoController,
       obscureText: false,
       decoration: InputDecoration(hintText: title),
+      validator: (value){
+        if(value.isEmpty){
+          return "Por favor ingrese su telefono";
+        }
+        
+        return null;
+      }, 
     );
   }
 
@@ -152,6 +233,15 @@ class _SignInState extends State<SignIn> {
       controller: passwordController,
       obscureText: true,
       decoration: InputDecoration(hintText: title),
+      validator: (value){
+        if(value.isEmpty){
+          return "La contraseña es requerida";
+        }
+        else if (value.length < 5){
+          return "La contraseña debe tener  mas de5 caracteres";
+        }
+        return null;
+      },
     );
   }
 
@@ -164,30 +254,32 @@ class _SignInState extends State<SignIn> {
         children: <Widget>[
           RawMaterialButton(
               constraints: BoxConstraints(
-                  minWidth: MediaQuery.of(context).size.width, minHeight: 50),
+                  minWidth: MediaQuery.of(context).size.width / 1.5, minHeight: 50),
               fillColor: Colors.blue[300],
-              child: Text("Sign In",
+              child: Text("Registrarse",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
               onPressed: () async {
                 setState(() {
                   _isLoading = true;
                 });
-                  RegisterProvider registerProvider = new RegisterProvider();
-                  UserProvider providerUser = new UserProvider();
-                  User usuario = await registerProvider.registrarUser(
-                                            nombreController.text,
-                                            apellidoPaternoController.text,
-                                            apellidoMaternoController.text,
-                                            dniController.text,
-                                            telefonoController.text,
-                                            mailController.text,
-                                            userController.text,
-                                            passwordController.text );
-                  Provider.of<UserProvider>(context, listen: false).setUsuario(usuario);
-                  var providerUsuario = Provider.of<UserProvider>(context, listen: false).getUsuario();
-                if(providerUsuario!=null){        
-                  var route = new MaterialPageRoute(builder: (BuildContext context) => MainMenu());
-                  Navigator.of(context).pushReplacement(route);
+                  if(_formKey.currentState.validate()){
+                      RegisterProvider registerProvider = new RegisterProvider();
+                      //UserProvider providerUser = new UserProvider();
+                      User usuario = await registerProvider.registrarUser(
+                                                nombreController.text,
+                                                apellidoPaternoController.text,
+                                                apellidoMaternoController.text,
+                                                dniController.text,
+                                                telefonoController.text,
+                                                mailController.text,
+                                                userController.text,
+                                                passwordController.text );
+                      Provider.of<UserProvider>(context, listen: false).setUsuario(usuario);
+                      var providerUsuario = Provider.of<UserProvider>(context, listen: false).getUsuario();
+                      if(providerUsuario!=null){        
+                      var route = new MaterialPageRoute(builder: (BuildContext context) => MainMenu());
+                      Navigator.of(context).pushReplacement(route);
+                  }
                 }
                 else {
                   setState(() {

@@ -19,6 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   DateTime backButtonPressTime;
   static const snackBarDuration = Duration(seconds: 2);
   final GlobalKey<ScaffoldState> scaffoldLoginKey = GlobalKey<ScaffoldState>();
+  final _formKey = GlobalKey<FormState>();
 
   snackBar(msg){
     return SnackBar(
@@ -31,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<bool> onErrorSnackBar(GlobalKey<ScaffoldState> key) async {
     try{
       final logError =  SnackBar(
-        content: Text('Error al loguear', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold), textAlign: TextAlign.center, ),
+        content: Text('El usuario o contraseña son incorrectos', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold), textAlign: TextAlign.center, ),
         duration: Duration(seconds: 2),
         backgroundColor: Colors.red[100]
       );
@@ -89,31 +90,28 @@ class _LoginPageState extends State<LoginPage> {
                       body(),
                       Container(
                         width: MediaQuery.of(context).size.width,
-                        height: 200.0,
+                        height: MediaQuery.of(context).size.height / 4,
                         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
                         margin: EdgeInsets.only(top: 30.0),
                         child: Column(
                           children: <Widget>[
                             RawMaterialButton(
-                                constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width, minHeight: 50),
+                                constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width / 1.5, minHeight: 50),
                                 fillColor: Colors.blue[300],
-                                child: Text("Ingresar", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold) ),
+                                child: Text("Iniciar Sesion", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold) ),
                                 onPressed: () async {
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
-                                  UserProvider providerUser = new UserProvider();
-                                  //Setting the user to Provider
-                                    User usuario = await providerUser.getFileUser(userController.text, passwordController.text);
-                                    Provider.of<UserProvider>(context, listen: false).setUsuario(usuario);
-                                  //Getting the user from Provider
-                                    var providerUsuario = Provider.of<UserProvider>(context, listen: false).getUsuario();
-                                    
-                                  //Validacion si existe o no el usuario
-                                    if(providerUsuario!=null){        
-                                      var route = new MaterialPageRoute(builder: (BuildContext context) => MainMenu());
+                                  if(_formKey.currentState.validate()){
+                                    setState(() {
+                                      _isLoading = true;
+                                    });
+                                     UserProvider providerUser = new UserProvider();
+                                     User usuario = await providerUser.getFileUser(userController.text, passwordController.text);
+                                     Provider.of<UserProvider>(context, listen: false).setUsuario(usuario);
+                                     var providerUsuario = Provider.of<UserProvider>(context, listen: false).getUsuario();
+                                     if(providerUsuario!=null){        
+                                       var route = new MaterialPageRoute(builder: (BuildContext context) => MainMenu());
                                       Navigator.of(context).pushReplacement(route);
-                                    }
+                                     }
                                     else {
                                       setState(() {
                                           _isLoading = false;
@@ -124,14 +122,15 @@ class _LoginPageState extends State<LoginPage> {
                                           }
                                       });
                                     }
+                                  }            
                                 },
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0) )
                             ),
                             SizedBox(height: 35),
                             RawMaterialButton(
-                                constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width, minHeight: 50),
+                                constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width / 1.5, minHeight: 50),
                                 fillColor: Colors.blue[300],
-                                child: Text("Registrarse", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                child: Text("Crea tu cuenta", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                                 onPressed: () {
                                   var route = new MaterialPageRoute(builder: (BuildContext context) => SignIn());
                                   Navigator.of(context).push(route);
@@ -153,10 +152,24 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController txtResponse = new TextEditingController();
 
   Widget header() {
-    return Container(
-      height: 155.0,
-      margin: EdgeInsets.symmetric(vertical: 50.0),
-      child: Image.asset("assets/LogoSIT.png", fit: BoxFit.contain),
+    return Column(
+      children: <Widget>[
+        Container(
+          height: MediaQuery.of(context).size.height / 7,
+          margin: EdgeInsets.symmetric(vertical: 30.0),
+          child: Image.asset("assets/LogoSIT.png", fit: BoxFit.contain),
+        ),
+        Container(
+          margin: EdgeInsets.fromLTRB(15, 0, 10, 0),
+          child: Text("Bienvenido al Sistema de Transporte",
+          textAlign: TextAlign.center,
+               style: TextStyle(color: Colors.blue, 
+                                fontStyle: FontStyle.italic, 
+                                fontWeight: FontWeight.bold,
+                                fontSize: 30 )
+                      )
+                  ),
+      ],
     );
   }
 
@@ -164,12 +177,15 @@ class _LoginPageState extends State<LoginPage> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
       margin: EdgeInsets.only(top: 30.0),
-      child: Column(
-        children: <Widget>[
-          txtUser("Usuario", Icons.person),
-          SizedBox(height: 30.0),
-          txtPassword("Contraseña", Icons.lock)
-        ],
+      child: Form(
+        key: _formKey,
+        child: Column(
+          children: <Widget>[
+            txtUser("Usuario", Icons.person),
+            SizedBox(height: 30.0),
+            txtPassword("Contraseña", Icons.lock)
+          ],
+        ),
       ),
     );
   }
@@ -179,6 +195,12 @@ class _LoginPageState extends State<LoginPage> {
       controller: userController,
       obscureText: false,
       decoration: InputDecoration(hintText: title, icon: Icon(icon)),
+      validator: (value){
+        if(value.isEmpty){
+          return "Por favor ingrese su usuario";
+        }
+        return null;
+      },
     );
   }
 
@@ -187,6 +209,12 @@ class _LoginPageState extends State<LoginPage> {
       controller: passwordController,
       obscureText: true,
       decoration: InputDecoration(hintText: title, icon: Icon(icon)),
+      validator: (value){
+        if(value.isEmpty){
+          return "Por favor ingrese su contraseña";
+        }
+        return null;
+      },
     );
   }
 

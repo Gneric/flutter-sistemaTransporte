@@ -46,24 +46,6 @@ class _RecargarState extends State<Recargar> {
             decoration: BoxDecoration(color: Colors.white),
             child: Column(
               children: <Widget>[
-                Card(
-                  elevation: 10.0,
-                  color: Colors.blue[100],
-                  child: ListTile(
-                    title: Text('Agregar metodo de pago'),
-                    leading: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Icon(Icons.credit_card),
-                        Icon(Icons.add)
-                      ],
-                    ),
-                    onTap: () => {
-                      //addCard(context, Cards('Card Add Test', '9988 5574 9856 2541', '04/22'))
-                    },
-                  ),
-                ),
-                SizedBox(height: 30.0),
                 Expanded(
                   child: GridView.count(
                     crossAxisCount: 2,
