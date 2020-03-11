@@ -18,10 +18,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider( builder: (_) => UserProvider() ),
-          ChangeNotifierProvider( builder: (_) => MovimientosProvider()),
-          ChangeNotifierProvider(builder: (_) => TrenStationProvider()),
-          ChangeNotifierProvider(builder: (_) => MetropolitanoStationProvider()),
-          ChangeNotifierProvider(builder: (_) => CorredorStationProvider())
+          ChangeNotifierProvider( builder: (_) => MovimientosProvider() ),
+          ChangeNotifierProvider( builder: (_) => TrenStationProvider() ),
+          ChangeNotifierProvider( builder: (_) => MetropolitanoStationProvider() ),
+          ChangeNotifierProvider( builder: (_) => CorredorStationProvider() )
         ],
         child: MaterialApp(
         title: 'Material App',
